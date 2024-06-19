@@ -74,16 +74,27 @@ __device__ int partition(int *arr, int low, int high)
     return i + 1;
 }
 
-// CUDA kernel for quick sort
-__global__ void quickSort(int *arr, int low, int high)
+// Host function to handle quick sort
+void quickSortHost(int *d_arr, int low, int high)
 {
     if (low < high)
     {
-        int pi = partition(arr, low, high);
+        // Allocate device memory for the pivot index
+        int *d_pi;
+        cudaMalloc(&d_pi, sizeof(int));
 
-        quickSort<<<1, 1>>>(arr, low, pi - 1);
-        quickSort<<<1, 1>>>(arr, pi + 1, high);
+        // Call partition kernel
+        partition<<<1, 1>>>(d_arr, low, high);
         cudaDeviceSynchronize();
+
+        // Copy the pivot index from device to host
+        int pi;
+        cudaMemcpy(&pi, d_pi, sizeof(int), cudaMemcpyDeviceToHost);
+        cudaFree(d_pi);
+
+        // Recursively call quicksort on the two halves
+        quickSortHost(d_arr, low, pi - 1);
+        quickSortHost(d_arr, pi + 1, high);
     }
 }
 
@@ -132,7 +143,7 @@ void performSortAndMeasureTime(const std::string &filename)
 
     // Measure quick sort time
     cudaEventRecord(start);
-    quickSort<<<1, 1>>>(d_arr, 0, n - 1);
+    quickSortHost(d_arr, 0, n - 1);
     cudaEventRecord(stop);
 
     cudaMemcpy(vec.data(), d_arr, n * sizeof(int), cudaMemcpyDeviceToHost);
