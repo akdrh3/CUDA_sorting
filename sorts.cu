@@ -54,7 +54,7 @@ void mergeSortHost(int *d_arr, int *d_temp, int left, int right)
 }
 
 // CUDA kernel for quick sort partition
-__device__ int partition(int *arr, int low, int high)
+__global__ void partition(int *arr, int low, int high, int *d_pi)
 {
     int pivot = arr[high];
     int i = low - 1;
@@ -71,7 +71,7 @@ __device__ int partition(int *arr, int low, int high)
     int temp = arr[i + 1];
     arr[i + 1] = arr[high];
     arr[high] = temp;
-    return i + 1;
+    *d_pi = i + 1;
 }
 
 // Host function to handle quick sort
@@ -84,7 +84,7 @@ void quickSortHost(int *d_arr, int low, int high)
         cudaMalloc(&d_pi, sizeof(int));
 
         // Call partition kernel
-        partition<<<1, 1>>>(d_arr, low, high);
+        partition<<<1, 1>>>(d_arr, low, high, d_pi);
         cudaDeviceSynchronize();
 
         // Copy the pivot index from device to host
