@@ -1,6 +1,7 @@
 import random as r
 
-input_a = int(input("Enter the size of numbers"))
+input_a = int(input("Enter the size of numbers: "))
+print("generating ... ")
 
 
 f = open("numbers.txt", "w")
