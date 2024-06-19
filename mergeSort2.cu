@@ -55,7 +55,7 @@ void mergeSortHost(int *d_arr, int *d_temp, int left, int right)
 
 int main()
 {
-    std::ifstream inputFile("sixfourMillionNum.txt");
+    std::ifstream inputFile("numbers.txt");
     if (!inputFile)
     {
         std::cerr << "Failed to open the file." << std::endl;
