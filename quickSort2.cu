@@ -102,13 +102,13 @@ void performQuickSortAndMeasureTime(const std::string &filename)
 
     std::cout << "Quick sort time for " << filename << ": " << milliseconds << " ms" << std::endl;
 
-    // Optionally, print the sorted array
-    std::cout << "Sorted output: ";
-    for (int i = 0; i < n; ++i)
-    {
-        std::cout << vec[i] << " ";
-    }
-    std::cout << std::endl;
+    // // Optionally, print the sorted array
+    // std::cout << "Sorted output: ";
+    // for (int i = 0; i < n; ++i)
+    // {
+    //     std::cout << vec[i] << " ";
+    // }
+    // std::cout << std::endl;
 }
 
 int main()
