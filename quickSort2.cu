@@ -99,8 +99,9 @@ void performQuickSortAndMeasureTime(const std::string &filename)
 
     float milliseconds = 0;
     cudaEventElapsedTime(&milliseconds, start, stop);
+    float seconds = milliseconds / 1000.0;
 
-    std::cout << "Time taken to quick sort " << n << " elements: " << milliseconds << " s" << std::endl;
+    std::cout << "Time taken to quick sort " << n << " elements: " << seconds << " s" << std::endl;
 
     // // Optionally, print the sorted array
     // std::cout << "Sorted output: ";
