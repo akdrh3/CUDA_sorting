@@ -55,6 +55,7 @@ void mergeSortHost(int *d_arr, int *d_temp, int left, int right)
 
 int main()
 {
+    std::cout << "starting mergesort " << std::endl;
     std::ifstream inputFile("numbers.txt");
     if (!inputFile)
     {

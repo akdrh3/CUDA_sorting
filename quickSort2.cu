@@ -78,7 +78,7 @@ void performQuickSortAndMeasureTime(const std::string &filename)
         vec.push_back(number);
     }
     inputFile.close();
-
+    std::cout << "starting mergesort " << std::endl;
     int n = vec.size();
     int *d_arr;
     cudaMalloc(&d_arr, n * sizeof(int));
