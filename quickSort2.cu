@@ -78,7 +78,7 @@ void performQuickSortAndMeasureTime(const std::string &filename)
         vec.push_back(number);
     }
     inputFile.close();
-    std::cout << "starting mergesort " << std::endl;
+    std::cout << "starting quicksort ... " << std::endl;
     int n = vec.size();
     int *d_arr;
     cudaMalloc(&d_arr, n * sizeof(int));
@@ -100,7 +100,7 @@ void performQuickSortAndMeasureTime(const std::string &filename)
     float milliseconds = 0;
     cudaEventElapsedTime(&milliseconds, start, stop);
 
-    std::cout << "Quick sort time for " << filename << ": " << milliseconds << " ms" << std::endl;
+    std::cout << "Time taken to quick sort " << n << " elements: " << milliseconds << " s" << std::endl;
 
     // // Optionally, print the sorted array
     // std::cout << "Sorted output: ";
