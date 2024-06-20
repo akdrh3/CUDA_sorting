@@ -3,39 +3,62 @@
 #include <vector>
 #include <cuda_runtime.h>
 
-__device__ void quickSortKernel(int *arr, int left, int right)
+__device__ void swap(int *a, int *b)
 {
-    if (left < right)
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+__device__ int partition(int *arr, int left, int right)
+{
+    int pivot = arr[right];
+    int i = left - 1;
+
+    for (int j = left; j <= right - 1; ++j)
     {
-        int i = left, j = right;
-        int pivot = arr[(left + right) / 2];
-
-        while (i <= j)
+        if (arr[j] <= pivot)
         {
-            while (arr[i] < pivot)
-                i++;
-            while (arr[j] > pivot)
-                j--;
-            if (i <= j)
-            {
-                int temp = arr[i];
-                arr[i] = arr[j];
-                arr[j] = temp;
-                i++;
-                j--;
-            }
+            ++i;
+            swap(&arr[i], &arr[j]);
         }
-
-        if (left < j)
-            quickSortKernel(arr, left, j);
-        if (i < right)
-            quickSortKernel(arr, i, right);
     }
+    swap(&arr[i + 1], &arr[right]);
+    return (i + 1);
 }
 
 __global__ void quickSort(int *arr, int left, int right)
 {
-    quickSortKernel(arr, left, right);
+    // Stack for storing left and right indices
+    int stack[1024];
+
+    // Initialize stack
+    int top = -1;
+    stack[++top] = left;
+    stack[++top] = right;
+
+    // Pop from stack and push sub-arrays
+    while (top >= 0)
+    {
+        right = stack[top--];
+        left = stack[top--];
+
+        int p = partition(arr, left, right);
+
+        // If there are elements on the left side of the pivot, push left side to stack
+        if (p - 1 > left)
+        {
+            stack[++top] = left;
+            stack[++top] = p - 1;
+        }
+
+        // If there are elements on the right side of the pivot, push right side to stack
+        if (p + 1 < right)
+        {
+            stack[++top] = p + 1;
+            stack[++top] = right;
+        }
+    }
 }
 
 void performQuickSortAndMeasureTime(const std::string &filename)
