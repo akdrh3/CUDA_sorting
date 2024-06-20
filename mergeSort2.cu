@@ -94,8 +94,9 @@ int main()
     cudaEventSynchronize(stop);
     float milliseconds = 0;
     cudaEventElapsedTime(&milliseconds, start, stop);
+    float seconds = milliseconds / 1000.0;
 
-    std::cout << "Time taken to merge sort " << n << " elements: " << milliseconds << " ms" << std::endl;
+    std::cout << "Time taken to merge sort " << n << " elements: " << seconds << " s" << std::endl;
 
     // Optionally, print the sorted array
     // for (int i = 0; i < n; ++i) {
