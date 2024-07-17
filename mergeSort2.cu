@@ -71,7 +71,7 @@ int main()
     }
     inputFile.close();
 
-    int n = vec.size();
+    uint64_t n = vec.size();
     int *d_arr;
     int *d_temp;
     cudaMalloc(&d_arr, n * sizeof(int));

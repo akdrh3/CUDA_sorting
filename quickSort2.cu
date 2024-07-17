@@ -79,7 +79,7 @@ void performQuickSortAndMeasureTime(const std::string &filename)
     }
     inputFile.close();
     std::cout << "starting quicksort ... " << std::endl;
-    int n = vec.size();
+    uint64_t n = vec.size();
     int *d_arr;
     cudaMalloc(&d_arr, n * sizeof(int));
     cudaMemcpy(d_arr, vec.data(), n * sizeof(int), cudaMemcpyHostToDevice);
