@@ -1,5 +1,5 @@
 CC = gcc
-NVCC = /usr/local/cuda/bin/NVCC
+NVCC = /usr/local/cuda/bin/nvcc
 CFLAGS = -Wall -Wextra -I. -std=c++11
 MERGE_TARGET = mergesort
 QUICK_TARGET = quicksort
