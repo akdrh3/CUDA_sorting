@@ -1,46 +1,37 @@
-#include <iostream>
-#include <fstream>
-#include <vector>
+#include "gpu_util.cuh"
 #include <cuda_runtime.h>
+#include <fstream>
+#include <iostream>
+#include <vector>
 
 // CUDA kernel to merge two sorted subarrays
-__global__ void merge(int *arr, int *temp, int left, int mid, int right)
-{
+__global__ void merge(int *arr, int *temp, int left, int mid, int right) {
     int i = left, j = mid + 1, k = left;
 
-    while (i <= mid && j <= right)
-    {
-        if (arr[i] <= arr[j])
-        {
+    while (i <= mid && j <= right) {
+        if (arr[i] <= arr[j]) {
             temp[k++] = arr[i++];
-        }
-        else
-        {
+        } else {
             temp[k++] = arr[j++];
         }
     }
 
-    while (i <= mid)
-    {
+    while (i <= mid) {
         temp[k++] = arr[i++];
     }
 
-    while (j <= right)
-    {
+    while (j <= right) {
         temp[k++] = arr[j++];
     }
 
-    for (int i = left; i <= right; i++)
-    {
+    for (int i = left; i <= right; i++) {
         arr[i] = temp[i];
     }
 }
 
 // Function to recursively split and merge the array on the host
-void mergeSortHost(int *d_arr, int *d_temp, int left, int right)
-{
-    if (left < right)
-    {
+void mergeSortHost(int *d_arr, int *d_temp, int left, int right) {
+    if (left < right) {
         int mid = (left + right) / 2;
 
         // Recursively sort the left and right halves
@@ -53,20 +44,17 @@ void mergeSortHost(int *d_arr, int *d_temp, int left, int right)
     }
 }
 
-int main()
-{
+int main() {
     std::cout << "starting mergesort " << std::endl;
     std::ifstream inputFile("numbers.txt");
-    if (!inputFile)
-    {
+    if (!inputFile) {
         std::cerr << "Failed to open the file." << std::endl;
         return 1;
     }
 
     std::vector<int> vec;
     int number;
-    while (inputFile >> number)
-    {
+    while (inputFile >> number) {
         vec.push_back(number);
     }
     inputFile.close();
