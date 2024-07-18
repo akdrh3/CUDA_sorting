@@ -40,7 +40,7 @@ void mergeSortHost(int *d_arr, int *d_temp, int left, int right) {
 
         // Merge the sorted halves on the device
         merge<<<1, 1>>>(d_arr, d_temp, left, mid, right);
-        cudaDeviceSynchronize();
+        HANDLE_ERROR(cudaDeviceSynchronize());
     }
 }
 
@@ -62,30 +62,27 @@ int main() {
     uint64_t n = vec.size();
     int *d_arr;
     int *d_temp;
-    cudaMalloc(&d_arr, n * sizeof(int));
-    cudaMalloc(&d_temp, n * sizeof(int));
-    cudaMemcpy(d_arr, vec.data(), n * sizeof(int), cudaMemcpyHostToDevice);
+    HANDLE_ERROR(cudaMallocManaged(&d_arr, n * sizeof(int)));
+    HANDLE_ERROR(cudaMallocManaged(&d_temp, n * sizeof(int)));
+
+    for (uint64_t i = 0; i < n; ++i) {
+        d_arr[i] = vec[i];
+    }
+    memcpy(d_arr, vec.data(), n * sizeof(int));
 
     // Measure time
     cudaEvent_t start, stop;
-    cudaEventCreate(&start);
-    cudaEventCreate(&stop);
+    cuda_timer_start(&start, &stop);
 
-    cudaEventRecord(start);
     mergeSortHost(d_arr, d_temp, 0, n - 1);
-    cudaEventRecord(stop);
 
-    cudaMemcpy(vec.data(), d_arr, n * sizeof(int), cudaMemcpyDeviceToHost);
-    cudaFree(d_arr);
-    cudaFree(d_temp);
-
-    cudaEventSynchronize(stop);
-    float milliseconds = 0;
-    cudaEventElapsedTime(&milliseconds, start, stop);
+    HANDLE_ERROR(cudaEventSynchronize(stop));
+    double milliseconds = cuda_timer_stop(start, stop);
     float seconds = milliseconds / 1000.0;
 
     std::cout << "Time taken to merge sort " << n << " elements: " << seconds << " s" << std::endl;
-
+    HANDLE_ERROR(cudaFree(d_arr));
+    HANDLE_ERROR(cudaFree(d_temp));
     // Optionally, print the sorted array
     // for (int i = 0; i < n; ++i) {
     //     std::cout << vec[i] << " ";
