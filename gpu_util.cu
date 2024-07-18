@@ -1,6 +1,6 @@
 #include "gpu_util.cuh"
 
-void HandleError(cudaError_t err) {
+__host__ void HandleError(cudaError_t err) {
     if (err != cudaSuccess) {
         printf("Error : %s\n", cudaGetErrorString(err));
         exit(EXIT_FAILURE);
