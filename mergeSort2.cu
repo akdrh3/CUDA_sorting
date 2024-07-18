@@ -66,7 +66,7 @@ __host__ float cuda_timer_stop(cudaEvent_t start, cudaEvent_t stop) {
 }
 
 int main() {
-    std::cout << "starting mergesort " << std::endl;
+    std::cout << "starting mergesort ... " << std::endl;
     std::ifstream inputFile("numbers.txt");
     if (!inputFile) {
         std::cerr << "Failed to open the file." << std::endl;
@@ -81,20 +81,22 @@ int main() {
     inputFile.close();
 
     uint64_t n = vec.size();
+    printf("vec.size = %llu\n", n);
     int *d_arr;
     int *d_temp;
     HANDLE_ERROR(cudaMallocManaged(&d_arr, n * sizeof(int)));
     HANDLE_ERROR(cudaMallocManaged(&d_temp, n * sizeof(int)));
 
-    for (uint64_t i = 0; i < n; ++i) {
-        d_arr[i] = vec[i];
-    }
+    printf("Allocating memory on GPU\n");
+    // for (uint64_t i = 0; i < n; ++i) {
+    //     d_arr[i] = vec[i];
+    // }
     memcpy(d_arr, vec.data(), n * sizeof(int));
 
     // Measure time
     cudaEvent_t start, stop;
     cuda_timer_start(&start, &stop);
-
+    printf("start merge sort ...\n");
     mergeSortHost(d_arr, d_temp, 0, n - 1);
 
     HANDLE_ERROR(cudaEventSynchronize(stop));

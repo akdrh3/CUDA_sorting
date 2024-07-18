@@ -72,7 +72,7 @@ void performQuickSortAndMeasureTime(const std::string &filename) {
     inputFile.close();
     std::cout << "starting quicksort ... " << std::endl;
     uint64_t n = vec.size();
-    printf("dataset size : %llu", n);
+    printf("dataset size : %llu\n", n);
     int *d_arr;
     printf("Allocating memory on GPU\n");
     HANDLE_ERROR(cudaMallocManaged(&d_arr, n * sizeof(int)));
