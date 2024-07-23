@@ -16,7 +16,7 @@ void read_from_file(char *file_name, int **numbers, uint64_t size_of_array) {
     }
 
     for (uint64_t i = 0; i < size_of_array; i++) {
-        if (fscanf(file, "%d", &(*numbers[i])) == EOF) {
+        if (fscanf(file, "%d", &(*numbers)[i]) == EOF) {
             perror("Error reading from file");
             exit(EXIT_FAILURE);
         }
@@ -45,7 +45,7 @@ uint64_t count_size_of_file(char *file_name) {
 int main() {
     char file_name[256];
     printf("Enter the file name: ");
-    scanf("%255", file_name);
+    scanf("%255s", file_name);
 
     uint64_t size_of_array = count_size_of_file(file_name);
     printf("Number of integers in the file : %llu\n", size_of_array);
