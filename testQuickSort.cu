@@ -50,5 +50,11 @@ int main() {
     uint64_t size_of_array = count_size_of_file(file_name);
     printf("Number of integers in the file : %llu\n", size_of_array);
 
+    int *number_array = NULL;
+    read_from_file(file_name, &number_array, size_of_array);
+    printf("Last element: %d\n", number_array[size_of_array - 1]);
+
+    free(number_array);
+
     return 0;
 }
