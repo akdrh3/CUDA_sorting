@@ -1,48 +1,40 @@
-CC = gcc
+# Makefile for building testQuickSort with nvcc and gcc
+
+# Compiler flags
 NVCC = /usr/local/cuda/bin/nvcc
-CFLAGS = -std=c++11
-MERGE_TARGET = mergesort
-QUICK_TARGET = quicksort
-MERGE_SRC = mergeSort2.cu
-QUICK_SRC = quickSort2.cu
-CUDEPS = gpu_util.cuh
-OBJ = gpu_util.o
+GCC = gcc
+NVCC_FLAGS = -c
+GCC_FLAGS = -c -std=c99 -Wall -Wextra -I.
 
-HEADERS = gpu_util.cuh 
-MERGE_OBJ = $(MERGE_SRC:.cu=.o)
-QUICK_OBJ = $(QUICK_SRC:.cu=.o)
+# Source files
+CUDA_SRC = testQuickSort.cu
+UTIL_SRC = util.c
 
-all: mergesort
+# Object files
+CUDA_OBJ = test.o
+UTIL_OBJ = util.o
 
-debug: CFLAGS += -ddebug -g -G
-debug: mergesort
-debug: quicksort
+# Executable file
+EXEC = testfile
 
-%.o: %.cu $(CUDEPS)
-	$(NVCC) $(CFLAGS) -dc -o $@ $<
+# Default target
+all: $(EXEC)
 
-mergesort: mergesort.o $(OBJ)
-	$(NVCC) $(CFLAGS) -rdc=true $^ -o $@
+# Build the CUDA object file
+$(CUDA_OBJ): $(CUDA_SRC)
+	$(NVCC) $(NVCC_FLAGS) $(CUDA_SRC) -o $(CUDA_OBJ)
 
-quicksort: quicksort.o $(OBJ)
-	$(NVCC) $(CFLAGS) -rdc-true $^ -o $@
+# Build the util object file
+$(UTIL_OBJ): $(UTIL_SRC)
+	$(GCC) $(GCC_FLAGS) $(UTIL_SRC) -o $(UTIL_OBJ)
 
+# Link the object files to create the executable
+$(EXEC): $(CUDA_OBJ) $(UTIL_OBJ)
+	$(NVCC) $(CUDA_OBJ) $(UTIL_OBJ) -o $(EXEC)
 
-# #like the object into the final executable for merge sort
-# $(MERGE_TARGET): $(MERGE_OBJ)
-# 	$(NVCC) $(CFLAGS) -o $(MERGE_TARGET) $(MERGE_OBJ)
-
-# $(QUICK_TARGET): $(QUICK_OBJ)
-# 	$(NVCC) $(CFLAGS) -o $(QUICK_TARGET) $(QUICK_OBJ)
-
-# #rule to compile .cu files into .o files
-# $(MERGE_OBJ): $(MERGE_SRC) $(HEADERS)
-# 	$(NVCC) $(CFLAGS) -c $< -o $@
-
-# $(QUICK_OBJ): $(QUICK_SRC) $(HEADERS)
-# 	$(NVCC) $(CFLAGS) -c $< -o $@
-
+# Clean up object files and executable
 clean:
-	rm -f $(MERGE_OBJ) $(QUICK_OBJ) $(MERGE_TARGET) $(QUICK_TARGET)
+	rm -f $(CUDA_OBJ) $(UTIL_OBJ) $(EXEC)
 
-.PHONY: all debug clean
+# Phony targets
+.PHONY: all clean
