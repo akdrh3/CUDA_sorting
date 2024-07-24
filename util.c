@@ -1,5 +1,4 @@
 #include "util.h"
-#include <cstdint>
 #include <stdio.h>
 #include <stdlib.h>
 
