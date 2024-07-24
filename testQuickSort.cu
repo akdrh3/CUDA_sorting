@@ -19,15 +19,20 @@ int main() {
     printf("Last element: %d\n", number_array[size_of_array - 1]);
 
     // Allocate memory on the GPU.
+
+    cudaEvent_t start, stop;
+    cuda_timer_start(&start, &stop);
+
     int *gpu_number_array = NULL;
     HANDLE_ERROR(cudaMalloc(&gpu_number_array, sizeof(int) * size_of_array));
     HANDLE_ERROR(cudaMemcpy(gpu_number_array, number_array, sizeof(int) * size_of_array, cudaMemcpyHostToDevice));
 
+    double time_copy_number_array_to_gpu = cuda_timer_stop(start, stop);
     int last_element;
     HANDLE_ERROR(cudaMemcpy(&last_element, gpu_number_array + size_of_array - 1, sizeof(int), cudaMemcpyDeviceToHost));
-    printf("Last element on cudamalloc: %d\n", last_element);
+    printf("Last element on cudamalloc: %d\n Time elipsed to copy array to gpu: %lf\n", last_element, time_copy_number_array_to_gpu);
 
-    cudaFree(gpu_number_array);
+    HANDLE_ERROR(cudaFree(gpu_number_array));
     free(number_array);
 
     return 0;
