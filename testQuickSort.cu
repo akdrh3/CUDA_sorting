@@ -6,6 +6,7 @@ extern "C" {
 }
 
 int main() {
+    // Read the numbers from the file into an array in CPU memory.
     char file_name[256];
     printf("Enter the file name: ");
     scanf("%255s", file_name);
@@ -17,7 +18,15 @@ int main() {
     read_from_file(file_name, &number_array, size_of_array);
     printf("Last element: %d\n", number_array[size_of_array - 1]);
 
+    // Allocate memory on the GPU.
+    int *gpu_number_array = NULL;
+    HANDLE_ERROR(cudamalloc(&gpu_number_array, sizeof(int) * size_of_array));
+    HANDLE_ERROR(cudaMemcpy(gpu_number_array, sizeof(int) * size_of_array, cudaMemcpyHostToDevice));
+    printf("Last element on cudamalloc: %d\n", gpu_number_array[size_of_array - 1]);
+    cudafree(gpu_number_array);
     free(number_array);
 
     return 0;
 }
+
+// Copy the array from CPU memory to GPU memory.
