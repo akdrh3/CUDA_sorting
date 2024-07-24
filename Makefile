@@ -7,11 +7,11 @@ NVCC_FLAGS = -c
 GCC_FLAGS = -c -std=c99 -Wall -Wextra -I.
 
 # Source files
-CUDA_SRC = testQuickSort.cu
+CUDA_SRC = testQuickSort.cu gpu_util.cu
 UTIL_SRC = util.c
 
 # Object files
-CUDA_OBJ = test.o
+CUDA_OBJ = test.o gpu_util.o
 UTIL_OBJ = util.o
 
 # Executable file
