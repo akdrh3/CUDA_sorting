@@ -21,8 +21,12 @@ int main() {
     // Allocate memory on the GPU.
     int *gpu_number_array = NULL;
     HANDLE_ERROR(cudaMalloc(&gpu_number_array, sizeof(int) * size_of_array));
-    HANDLE_ERROR(cudaMemcpy(gpu_number_array, sizeof(int) * size_of_array, cudaMemcpyHostToDevice));
-    printf("Last element on cudamalloc: %d\n", gpu_number_array[size_of_array - 1]);
+    HANDLE_ERROR(cudaMemcpy(gpu_number_array, number_array, sizeof(int) * size_of_array, cudaMemcpyHostToDevice));
+
+    int last_element;
+    HANDLE_ERROR(cudaMemcpy(&last_element, gpu_number_array + size_of_array - 1, sizeof(int), cudaMemcpyDeviceToHost));
+    printf("Last element on cudamalloc: %d\n", last_element);
+
     cudaFree(gpu_number_array);
     free(number_array);
 
