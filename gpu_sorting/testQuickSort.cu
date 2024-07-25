@@ -61,6 +61,7 @@ int main() {
 
     uint64_t size_of_array = count_size_of_file(file_name);
     printf("Number of integers in the file : %lu\n", size_of_array);
+    fflush(stdout);
 
     int *number_array = NULL;
     read_from_file(file_name, &number_array, size_of_array);
@@ -75,6 +76,7 @@ int main() {
     cudaEvent_t start, stop;
     cuda_timer_start(&start, &stop);
     printf("Start Quick Sort . . . \n");
+    fflush(stdout);
 
     // Allocate memory on the GPU.
     int *gpu_number_array = NULL;
@@ -97,6 +99,7 @@ int main() {
     // print_array(number_array, size_of_array);
 
     printf("Time elipsed for quick sort: %lf s\n", gpu_sort_time_sec);
+    fflush(stdout);
 
     HANDLE_ERROR(cudaFree(gpu_number_array));
     free(number_array);

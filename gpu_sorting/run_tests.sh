@@ -12,7 +12,7 @@ do
     echo $number | python3 numberGenerate.py
 
     # Run testQuickSort with numbers.txt and capture output
-    output=$(echo "numbers.txt" | stdbuf -oL ./testQuickSort 2>> error_log.txt)
+    output=$(echo "numbers.txt" | ./testQuickSort 2>> error_log.txt)
 
     # Print and save output
     echo "$output"
