@@ -59,7 +59,7 @@ int main() {
     // printf("Last element: %d\n", number_array[size_of_array - 1]);
 
     const int64_t size_of_array = 30;
-    int number_array[size_of_array] = {7, 8, 10, 12, 14, 16, 18, 19, 20, 26, 36, 41, 44, 47, 51, 53, 56, 61, 65, 67, 69, 70, 71, 72, 77, 78, 81, 83, 85, 100};
+    int number_array[size_of_array] = {18, 47, 59, 66, 70, 87, 91, 136, 148, 151, 177, 190, 220, 243, 249, 290, 296, 321, 333, 343, 354, 383, 389, 411, 424, 428, 451, 456, 461, 495};
     printf("Original array: \n");
     print_array(number_array, size_of_array);
 
