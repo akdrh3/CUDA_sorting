@@ -25,12 +25,12 @@ __device__ int64_t partition(int *arr, int64_t low, int64_t high) {
     for (int64_t j = low; j < high; j++) {
         if (arr[j] < pivot) {
             i = i + 1;
-            printf("swapping %d and %d\n", arr[j], arr[i]);
+            // printf("swapping %d and %d\n", arr[j], arr[i]);
             swap(&arr[i], &arr[j]);
         }
-        printf("j : %ld, high : %ld, i : %ld, arr[j] : %d, pivot : %d\n", j, high, i, arr[j], pivot);
+        // printf("j : %ld, high : %ld, i : %ld, arr[j] : %d, pivot : %d\n", j, high, i, arr[j], pivot);
     }
-    printf("last swapping %d and %d\n", arr[i + 1], arr[high]);
+    // printf("last swapping %d and %d\n", arr[i + 1], arr[high]);
     swap(&arr[i + 1], &arr[high]);
     // printf("current array\n");
     // gpu_print_array(arr, 10);
@@ -71,6 +71,7 @@ int main() {
     printf("Original array: \n");
     print_array(number_array, size_of_array);
 
+    // start timer
     cudaEvent_t start, stop;
     cuda_timer_start(&start, &stop);
 
@@ -81,10 +82,14 @@ int main() {
     // Copy the array from CPU memory to GPU memory.
     HANDLE_ERROR(cudaMemcpy(gpu_number_array, number_array, sizeof(int) * size_of_array, cudaMemcpyHostToDevice));
 
+    // starting quick sort
     quickSortKernel<<<1, 1>>>(gpu_number_array, 0, size_of_array - 1);
     HANDLE_ERROR(cudaDeviceSynchronize());
+
+    // stop timer
     double gpu_sort_time = cuda_timer_stop(start, stop);
 
+    // writing back
     HANDLE_ERROR(cudaMemcpy(number_array, gpu_number_array, sizeof(int) * size_of_array, cudaMemcpyDeviceToHost));
     printf("Sorted array: \n");
     print_array(number_array, size_of_array);
