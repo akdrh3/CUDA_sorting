@@ -83,7 +83,7 @@ int main() {
     printf("Time elipsed to copy array to gpu: %lf\n", gpu_sort_time);
 
     HANDLE_ERROR(cudaFree(gpu_number_array));
-    free(number_array);
+    // free(number_array);
 
     return 0;
 }
