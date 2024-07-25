@@ -58,8 +58,8 @@ int main() {
     // read_from_file(file_name, &number_array, size_of_array);
     // printf("Last element: %d\n", number_array[size_of_array - 1]);
 
-    const int64_t size_of_array = 30;
-    int number_array[size_of_array] = {18, 47, 59, 66, 70, 87, 91, 136, 148, 151, 177, 190, 220, 243, 249, 290, 296, 321, 333, 343, 354, 383, 389, 411, 424, 428, 451, 456, 461, 495};
+    const int64_t size_of_array = 40;
+    int number_array[size_of_array] = {449, 262, 270, 311, 399, 46, 409, 88, 140, 278, 162, 157, 65, 434, 344, 131, 28, 56, 273, 480, 170, 364, 334, 93, 83, 244, 17, 70, 374, 306, 105, 150, 119, 242, 293, 266, 235, 29, 1, 448};
     printf("Original array: \n");
     print_array(number_array, size_of_array);
 
