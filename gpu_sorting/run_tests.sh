@@ -9,7 +9,7 @@ for number in "${numbers[@]}"
 do
     # Run numberGenerate.py with the current number
     echo "Running numberGenerate.py with $number"
-    python3 numberGenerate.py $number
+    echo $number | python3 numberGenerate.py
 
     # Run testQuickSort with numbers.txt and capture output
     output=$(echo "numbers.txt" | ./testQuickSort)
