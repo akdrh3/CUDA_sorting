@@ -26,6 +26,8 @@ __device__ int64_t partition(int *arr, int64_t low, int64_t high) {
     }
     printf("last swapping %d and %d\n", arr[i + 1], arr[high]);
     swap(&arr[i + 1], &arr[high]);
+    printf("current array\n");
+    print_array(arr, high);
 
     return i + 1;
 }
