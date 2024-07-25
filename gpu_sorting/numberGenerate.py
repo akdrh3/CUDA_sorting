@@ -6,7 +6,7 @@ print("generating ... ")
 
 f = open("numbers.txt", "w")
 for i in range(0,input_a * 10):
-    num = r.randint(0,100000000)
+    num = r.randint(0,100)
     f.write("%d\n"%num)
 
 # f = open("oteMillionNum.txt", "w")
