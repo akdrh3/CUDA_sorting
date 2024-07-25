@@ -12,7 +12,7 @@ __device__ void swap(int *a, int *b) {
     *b = tmp;
 }
 
-__device__ int64_t partition(int arr[], int64_t low, int64_t high) {
+__device__ int64_t partition(int *arr, int64_t low, int64_t high) {
     int pivot = arr[high];
     int64_t i = low - 1;
 
@@ -74,6 +74,7 @@ int main() {
     HANDLE_ERROR(cudaMemcpy(gpu_number_array, number_array, sizeof(int) * size_of_array, cudaMemcpyHostToDevice));
 
     quickSortKernel<<<1, 1>>>(gpu_number_array, 0, size_of_array - 1);
+    HANDLE_ERROR(cudaDeviceSynchronize());
     double gpu_sort_time = cuda_timer_stop(start, stop);
     int last_element;
     HANDLE_ERROR(cudaMemcpy(number_array, gpu_number_array, sizeof(int), cudaMemcpyDeviceToHost));
