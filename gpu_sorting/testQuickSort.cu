@@ -56,7 +56,7 @@ void print_array(int *int_array, int64_t array_size) {
 int main() {
     // // Read the numbers from the file into an array in CPU memory.
     char file_name[256];
-    printf("Enter the file name: ");
+    printf("Enter the file name: \n");
     scanf("%255s", file_name);
 
     uint64_t size_of_array = count_size_of_file(file_name);
@@ -74,6 +74,7 @@ int main() {
     // start timer
     cudaEvent_t start, stop;
     cuda_timer_start(&start, &stop);
+    printf("Start Quick Sort . . . \n");
 
     // Allocate memory on the GPU.
     int *gpu_number_array = NULL;
@@ -95,7 +96,7 @@ int main() {
     // printf("Sorted array: \n");
     // print_array(number_array, size_of_array);
 
-    printf("Time elipsed to copy array to gpu: %lf s\n", gpu_sort_time_sec);
+    printf("Time elipsed for quick sort: %lf s\n", gpu_sort_time_sec);
 
     HANDLE_ERROR(cudaFree(gpu_number_array));
     free(number_array);

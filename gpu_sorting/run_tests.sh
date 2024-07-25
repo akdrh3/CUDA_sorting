@@ -12,10 +12,9 @@ do
     echo $number | python3 numberGenerate.py
 
     # Run testQuickSort with numbers.txt and capture output
-    output=$(echo "numbers.txt" | ./testQuickSort)
+    echo "numbers.txt" | ./testQuickSort >> output.txt
 
     # Print and save output
-    echo "$output"
     echo "$output" >> output.txt
 
     # Separate outputs with a line

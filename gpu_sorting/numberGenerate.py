@@ -19,7 +19,7 @@ for i in range(0,input_a * 1000000):
 end_time = time.time()
 
 elapsed_time = end_time - start_time
-print(f"Elapsed time: {elapsed_time} sec")
+print(f"Elapsed time for generating data set: {elapsed_time} sec")
 
 # f = open("oteMillionNum.txt", "w")
 # for i in range(0,128000000):
