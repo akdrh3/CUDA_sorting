@@ -22,9 +22,9 @@ __device__ int64_t partition(int *arr, int64_t low, int64_t high) {
             printf("swapping %d and %d\n", arr[j], arr[i]);
             swap(&arr[i], &arr[j]);
         }
-        // printf("j : %ld, high : %ld, i : %ld, arr[j] : %d, pivot : %d\n", j, high, i, arr[j], pivot);
+        printf("j : %ld, high : %ld, i : %ld, arr[j] : %d, pivot : %d\n", j, high, i, arr[j], pivot);
     }
-    // printf("j : %lld, high : %lld, i : %lld, arr[j] : %d, pivot : %d", j, high, i, arr[j], pivot);
+    printf("j : %lld, high : %lld, i : %lld, arr[j] : %d, pivot : %d", j, high, i, arr[j], pivot);
     swap(&arr[i + 1], &arr[high]);
 
     return i + 1;
