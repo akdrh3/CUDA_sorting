@@ -30,11 +30,11 @@ __device__ int64_t partition(int arr[], int64_t low, int64_t high) {
     return i + 1;
 }
 
-__global__ void quickSortKernel(int arr[], int64_t low, int64_t high) {
+__global__ void quickSortKernel(int *arr, int64_t low, int64_t high) {
     if (low < high) {
         int64_t pi = partition(arr, low, high);
-        quickSortKernel(arr, low, pi - 1);
-        quickSortKernel(arr, pi + 1, high);
+        quickSortKernel<<<1, 1>>>(arr, low, pi - 1);
+        quickSortKernel<<<1, 1>>>(arr, pi + 1, high);
     }
 }
 
@@ -73,14 +73,14 @@ int main() {
     // Copy the array from CPU memory to GPU memory.
     HANDLE_ERROR(cudaMemcpy(gpu_number_array, number_array, sizeof(int) * size_of_array, cudaMemcpyHostToDevice));
 
-    quickSortKernel<<<1, 1>>>(gpu_number_array, 0, size_of_array);
-    double time_copy_number_array_to_gpu = cuda_timer_stop(start, stop);
+    quickSortKernel<<<1, 1>>>(gpu_number_array, 0, size_of_array - 1);
+    double gpu_sort_time = cuda_timer_stop(start, stop);
     int last_element;
     HANDLE_ERROR(cudaMemcpy(number_array, gpu_number_array, sizeof(int), cudaMemcpyDeviceToHost));
     printf("Sorted array: \n");
     print_array(number_array, size_of_array);
 
-    // printf("Last element on cudamalloc: %d\n Time elipsed to copy array to gpu: %lf\n", last_element, time_copy_number_array_to_gpu);
+    printf("Time elipsed to copy array to gpu: %lf\n", gpu_sort_time);
 
     HANDLE_ERROR(cudaFree(gpu_number_array));
     free(number_array);
