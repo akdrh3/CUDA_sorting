@@ -27,7 +27,7 @@ __device__ int64_t partition(int *arr, int64_t low, int64_t high) {
     printf("last swapping %d and %d\n", arr[i + 1], arr[high]);
     swap(&arr[i + 1], &arr[high]);
     printf("current array\n");
-    print_array(arr, high);
+    gpu_print_array(arr, high);
 
     return i + 1;
 }
@@ -41,6 +41,13 @@ __global__ void quickSortKernel(int *arr, int64_t low, int64_t high) {
 }
 
 void print_array(int *int_array, int64_t array_size) {
+    for (int64_t i = 0; i < array_size; ++i) {
+        printf("%d ", int_array[i]);
+    }
+    printf("\n");
+}
+
+__device__ void gpu_print_array(int *int_array, int64_t array_size) {
     for (int64_t i = 0; i < array_size; ++i) {
         printf("%d ", int_array[i]);
     }
