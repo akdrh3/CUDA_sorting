@@ -1,41 +1,24 @@
 #!/bin/bash
+# Save this as runAllTests.sh
 
-# Initial dataset size
-dataset_size=1
+# Array of numbers
+numbers=(1 2 4 8 16 32 64 128 256 512 1024 2048 4096 8192)
 
-# Maximum dataset size
-max_dataset_size=8192
-
-# Output file for results
-output_file="sorting_results.txt"
-
-# Append header if the file is empty
-if [ ! -s $output_file ]; then
-    echo "Dataset Size, Number of Integers, Time Taken (ms)" > $output_file
-fi
-
-while [ $dataset_size -le $max_dataset_size ]
+# Iterate over each number in the array
+for number in "${numbers[@]}"
 do
-    # Generate the dataset
-    echo "Generating dataset of size $dataset_size..."
-    echo "$dataset_size" | python3 numberGenerate.py
+    # Run numberGenerate.py with the current number
+    echo "Running numberGenerate.py with $number"
+    python3 numberGenerate.py $number
 
-    # Run the sorting test
-    echo "Running ./testQuickSort for dataset of size $dataset_size..."
-    result=$(echo "numbers.txt" | ./testQuickSort)
-    
-    # Extract number of integers and time taken
-    num_integers=$(echo "$result" | grep "Number of integers in the file" | awk '{print $7}')
-    time_taken=$(echo "$result" | grep "Time elipsed to copy array to gpu" | awk '{print $7}')
-    
-    # Print the results
-    echo "Dataset size: $dataset_size, Number of integers: $num_integers, Time taken: $time_taken ms"
+    # Run testQuickSort with numbers.txt and capture output
+    output=$(echo "numbers.txt" | ./testQuickSort)
 
-    # Save the results
-    echo "$dataset_size, $num_integers, $time_taken" >> $output_file
+    # Print and save output
+    echo "$output"
+    echo "$output" >> output.txt
 
-    # Double the dataset size for the next iteration
-    dataset_size=$((dataset_size * 2))
+    # Separate outputs with a line
+    echo "--------------------------------------"
+    echo "--------------------------------------" >> output.txt
 done
-
-echo "Test completed. Results are saved in $output_file."
