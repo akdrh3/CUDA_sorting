@@ -11,6 +11,12 @@ __device__ void swap(int *a, int *b) {
     *a = *b;
     *b = tmp;
 }
+__device__ void gpu_print_array(int *int_array, int64_t array_size) {
+    for (int64_t i = 0; i < array_size; ++i) {
+        printf("%d ", int_array[i]);
+    }
+    printf("\n");
+}
 
 __device__ int64_t partition(int *arr, int64_t low, int64_t high) {
     int pivot = arr[high];
@@ -41,13 +47,6 @@ __global__ void quickSortKernel(int *arr, int64_t low, int64_t high) {
 }
 
 void print_array(int *int_array, int64_t array_size) {
-    for (int64_t i = 0; i < array_size; ++i) {
-        printf("%d ", int_array[i]);
-    }
-    printf("\n");
-}
-
-__device__ void gpu_print_array(int *int_array, int64_t array_size) {
     for (int64_t i = 0; i < array_size; ++i) {
         printf("%d ", int_array[i]);
     }
