@@ -84,8 +84,8 @@ int main() {
     quickSortKernel<<<1, 1>>>(gpu_number_array, 0, size_of_array - 1);
     HANDLE_ERROR(cudaDeviceSynchronize());
     double gpu_sort_time = cuda_timer_stop(start, stop);
-    int last_element;
-    HANDLE_ERROR(cudaMemcpy(number_array, gpu_number_array, sizeof(int), cudaMemcpyDeviceToHost));
+
+    HANDLE_ERROR(cudaMemcpy(number_array, gpu_number_array, sizeof(int) * size_of_array, cudaMemcpyDeviceToHost));
     printf("Sorted array: \n");
     print_array(number_array, size_of_array);
 
