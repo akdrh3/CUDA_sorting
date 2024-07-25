@@ -88,13 +88,14 @@ int main() {
 
     // stop timer
     double gpu_sort_time = cuda_timer_stop(start, stop);
+    double gpu_sort_time_sec = gpu_sort_time / 1000.0;
 
     // writing back
-    HANDLE_ERROR(cudaMemcpy(number_array, gpu_number_array, sizeof(int) * size_of_array, cudaMemcpyDeviceToHost));
+    // HANDLE_ERROR(cudaMemcpy(number_array, gpu_number_array, sizeof(int) * size_of_array, cudaMemcpyDeviceToHost));
     // printf("Sorted array: \n");
     // print_array(number_array, size_of_array);
 
-    printf("Time elipsed to copy array to gpu: %lf\n", gpu_sort_time);
+    printf("Time elipsed to copy array to gpu: %lf s\n", gpu_sort_time_sec);
 
     HANDLE_ERROR(cudaFree(gpu_number_array));
     free(number_array);
