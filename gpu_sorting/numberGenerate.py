@@ -1,6 +1,7 @@
 import random as r
 import time
 import math
+from datetime import datetime
 
 input_a = int(input("Enter the size of numbers: "))
 print("generating ... ")
@@ -20,6 +21,15 @@ end_time = time.time()
 
 elapsed_time = end_time - start_time
 print(f"Elapsed time for generating data set: {elapsed_time} sec")
+
+# Get the current time
+current_time = datetime.now()
+
+# Format the time
+formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+
+# Print the formatted time
+print("Current Time:", formatted_time)
 
 # f = open("oteMillionNum.txt", "w")
 # for i in range(0,128000000):
