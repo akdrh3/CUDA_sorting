@@ -68,8 +68,8 @@ int main() {
 
     // const int64_t size_of_array = 40;
     // int number_array[size_of_array] = {449, 262, 270, 311, 399, 46, 409, 88, 140, 278, 162, 157, 65, 434, 344, 131, 28, 56, 273, 480, 170, 364, 334, 93, 83, 244, 17, 70, 374, 306, 105, 150, 119, 242, 293, 266, 235, 29, 1, 448};
-    printf("Original array: \n");
-    print_array(number_array, size_of_array);
+    // printf("Original array: \n");
+    // print_array(number_array, size_of_array);
 
     // start timer
     cudaEvent_t start, stop;
@@ -91,8 +91,8 @@ int main() {
 
     // writing back
     HANDLE_ERROR(cudaMemcpy(number_array, gpu_number_array, sizeof(int) * size_of_array, cudaMemcpyDeviceToHost));
-    printf("Sorted array: \n");
-    print_array(number_array, size_of_array);
+    // printf("Sorted array: \n");
+    // print_array(number_array, size_of_array);
 
     printf("Time elipsed to copy array to gpu: %lf\n", gpu_sort_time);
 
