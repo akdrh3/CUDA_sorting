@@ -1,9 +1,9 @@
 CXX = g++
 CXXFLAGS = -Wall -g
 
-TARGET = quicksort
+TARGET = mergesort
 
-SRCS = quicksort.cpp
+SRCS = mergesort.cpp 
 
 OBJS= $(SRCS:.cpp=.o)
 
