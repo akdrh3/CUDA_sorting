@@ -13,11 +13,59 @@ void merge(int *arr, int64_t const left, int64_t const mid, int64_t const right)
     int64_t const left_array_size = mid - left + 1;
     int64_t const right_array_size = right - mid;
 
-    printf("merging begin : %lu, mid : %lu, end : %lu, array[b] : %d, array[m] : %d, array[e] : %d\n", left, mid, right, arr[left], arr[mid], arr[right]);
+    //printf("merging begin : %lu, mid : %lu, end : %lu, array[b] : %d, array[m] : %d, array[e] : %d\n", left, mid, right, arr[left], arr[mid], arr[right]);
 
-    // int *left_array = (*int)malloc(left_array_size * sizeof(int));
-    // int *right_array = (*int)malloc(right_array_size * sizeof(int));
+    int *left_array = (int*)malloc(left_array_size * sizeof(int));
+    int *right_array = (int*)malloc(right_array_size * sizeof(int));
 
+    //copy data to temp arrays
+    for (int64_t i = 0; i < left_array_size; i++){
+        left_array[i] = arr[left + i];
+    }
+    for (int64_t j = 0; j < right_array_size; j++){
+        right_array[j] = arr[mid + 1 + j];
+    }  
+
+    printf("merge begin\n left array: ");
+    print_array(left_array, left_array_size);
+    printf("right array: ");
+    print_array(right_array, right_array_size);
+
+
+    int64_t index_of_left_array = 0, index_of_right_array = 0;
+    int64_t index_of_merged_array = left;
+    //Merge the temp arrays back into arr
+    while(index_of_left_array < left_array_size && index_of_right_array < right_array_size){
+        if(left_array[index_of_left_array] <= right_array[index_of_right_array]){
+            arr[index_of_merged_array] = left_array[index_of_left_array];
+            index_of_left_array++;
+        }
+        else{
+            arr[index_of_merged_array] = right_array[index_of_right_array];
+            index_of_right_array++;
+        }
+        index_of_merged_array++;
+    }
+
+
+    //copy the remaining element
+    while(index_of_left_array < left_array_size){
+        arr[index_of_merged_array] = left_array[index_of_left_array];
+        index_of_left_array++;
+        index_of_merged_array++;
+    }
+
+    while(index_of_right_array < right_array_size){
+        arr[index_of_merged_array] = right_array[index_of_right_array];
+        index_of_right_array++;
+        index_of_merged_array++;
+    }
+
+    free(left_array);
+    free(right_array);
+
+    
+    
 }
 
 void mergesort(int *arr, int64_t const begin, int64_t const end){
@@ -32,15 +80,16 @@ void mergesort(int *arr, int64_t const begin, int64_t const end){
     mergesort(arr, begin, mid);
     mergesort(arr, mid+1, end);
     merge(arr, begin, mid, end);
+    print_array(arr, 7);
 }
 
 int main(){
     const int64_t array_size = 7;
     int numbers[array_size] = {38, 27, 43, 3, 9, 82, 10};
 
-    print_array(numbers, 7);
+    print_array(numbers, array_size);
 
-    printf("mergesort start");
+    printf("mergesort start\n");
     mergesort(numbers, 0, array_size -1 );
 
     return 0;
