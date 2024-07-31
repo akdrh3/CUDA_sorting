@@ -2,7 +2,7 @@
 CC = gcc
 CFLAGS = -c -std=c99 -Wall -Wextra -I.
 NVCC = /usr/local/cuda/bin/nvcc
-NVCCFLAGS = -c -rdc=true -I
+NVCCFLAGS = -c -rdc=true
 
 # Files
 C_FILES = util.c
