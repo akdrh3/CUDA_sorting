@@ -24,6 +24,9 @@ all: $(OUTPUT) $(MERGESORT_OUTPUT)
 $(OUTPUT): $(OBJS)
 	$(NVCC) $(OBJS) -o $@ -lcudart
 
+$(MERGESORT_OUTPUT): $(LARGEMERGE_OBJS)
+	$(NVCC) $(LARGEMERGE_OBJS) -o $@ -lcudart
+
 %.o: %.c
 	$(CC) $(CFLAGS) $< -o $@
 
