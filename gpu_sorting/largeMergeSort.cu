@@ -128,15 +128,15 @@ int main() {
     //  start timer
     cudaEvent_t start, stop;
     cuda_timer_start(&start, &stop);
-    printf("Start Merge Sort . . . \n");
+    printf("Start Merge Sort . . . \n\n");
 
     mergesort(gpu_arr, gpu_tmp, 0, size_of_array - 1);
     HANDLE_ERROR(cudaDeviceSynchronize());
 
     HANDLE_ERROR(cudaMemcpy(number_array, gpu_arr, size_of_array * sizeof(int), cudaMemcpyDeviceToHost));
 
-    printf("Sorted array last element: \n");
-    print_array(number_array + size_of_array - 2, 2);
+    // printf("Sorted array last element: \n");
+    // print_array(number_array + size_of_array - 2, 2);
 
     // stop timer
     double gpu_sort_time = cuda_timer_stop(start, stop);
