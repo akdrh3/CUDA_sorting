@@ -10,58 +10,58 @@ void print_array(int *int_array, int64_t array_size) {
     printf("\n");
 }
 
-__global__ void old_mergeKernel(int *gpu_arr, int *gpu_left_array, int *gpu_right_array, int64_t left_array_size, int64_t right_array_size) {
+// __global__ void old_mergeKernel(int *gpu_arr, int *gpu_left_array, int *gpu_right_array, int64_t left_array_size, int64_t right_array_size) {
 
-    int64_t index_of_left_array = 0, index_of_right_array = 0;
-    int64_t index_of_merged_array = 0;
+//     int64_t index_of_left_array = 0, index_of_right_array = 0;
+//     int64_t index_of_merged_array = 0;
 
-    // Merge the temp arrays back into arr
-    while (index_of_left_array < left_array_size && index_of_right_array < right_array_size) {
-        if (gpu_left_array[index_of_left_array] <= gpu_right_array[index_of_right_array]) {
-            gpu_arr[index_of_merged_array] = gpu_left_array[index_of_left_array];
-            index_of_left_array++;
-        } else {
-            gpu_arr[index_of_merged_array] = gpu_right_array[index_of_right_array];
-            index_of_right_array++;
-        }
-        index_of_merged_array++;
-    }
+//     // Merge the temp arrays back into arr
+//     while (index_of_left_array < left_array_size && index_of_right_array < right_array_size) {
+//         if (gpu_left_array[index_of_left_array] <= gpu_right_array[index_of_right_array]) {
+//             gpu_arr[index_of_merged_array] = gpu_left_array[index_of_left_array];
+//             index_of_left_array++;
+//         } else {
+//             gpu_arr[index_of_merged_array] = gpu_right_array[index_of_right_array];
+//             index_of_right_array++;
+//         }
+//         index_of_merged_array++;
+//     }
 
-    // copy the remaining element
-    while (index_of_left_array < left_array_size) {
-        gpu_arr[index_of_merged_array] = gpu_left_array[index_of_left_array];
-        index_of_left_array++;
-        index_of_merged_array++;
-    }
+//     // copy the remaining element
+//     while (index_of_left_array < left_array_size) {
+//         gpu_arr[index_of_merged_array] = gpu_left_array[index_of_left_array];
+//         index_of_left_array++;
+//         index_of_merged_array++;
+//     }
 
-    while (index_of_right_array < right_array_size) {
-        gpu_arr[index_of_merged_array] = gpu_right_array[index_of_right_array];
-        index_of_right_array++;
-        index_of_merged_array++;
-    }
-}
+//     while (index_of_right_array < right_array_size) {
+//         gpu_arr[index_of_merged_array] = gpu_right_array[index_of_right_array];
+//         index_of_right_array++;
+//         index_of_merged_array++;
+//     }
+// }
 
-void old_merge(int *arr, int64_t const left, int64_t const mid, int64_t const right) {
-    int64_t const left_array_size = mid - left + 1;
-    int64_t const right_array_size = right - mid;
+// void old_merge(int *arr, int64_t const left, int64_t const mid, int64_t const right) {
+//     int64_t const left_array_size = mid - left + 1;
+//     int64_t const right_array_size = right - mid;
 
-    int *gpu_arr, *gpu_left_arry, *gpu_right_arry;
+//     int *gpu_arr, *gpu_left_arry, *gpu_right_arry;
 
-    HANDLE_ERROR(cudaMalloc((void **)&gpu_arr, (right - left + 1) * sizeof(int)));
-    HANDLE_ERROR(cudaMalloc((void **)&gpu_left_arry, left_array_size * sizeof(int)));
-    HANDLE_ERROR(cudaMalloc((void **)&gpu_right_arry, right_array_size * sizeof(int)));
+//     HANDLE_ERROR(cudaMalloc((void **)&gpu_arr, (right - left + 1) * sizeof(int)));
+//     HANDLE_ERROR(cudaMalloc((void **)&gpu_left_arry, left_array_size * sizeof(int)));
+//     HANDLE_ERROR(cudaMalloc((void **)&gpu_right_arry, right_array_size * sizeof(int)));
 
-    HANDLE_ERROR(cudaMemcpy(gpu_left_arry, arr + left, left_array_size * sizeof(int), cudaMemcpyHostToDevice));
-    HANDLE_ERROR(cudaMemcpy(gpu_right_arry, arr + mid + 1, right_array_size * sizeof(int), cudaMemcpyHostToDevice));
+//     HANDLE_ERROR(cudaMemcpy(gpu_left_arry, arr + left, left_array_size * sizeof(int), cudaMemcpyHostToDevice));
+//     HANDLE_ERROR(cudaMemcpy(gpu_right_arry, arr + mid + 1, right_array_size * sizeof(int), cudaMemcpyHostToDevice));
 
-    old_mergeKernel<<<1, 1>>>(gpu_arr, gpu_left_arry, gpu_right_arry, left_array_size, right_array_size);
-    HANDLE_ERROR(cudaDeviceSynchronize());
+//     old_mergeKernel<<<1, 1>>>(gpu_arr, gpu_left_arry, gpu_right_arry, left_array_size, right_array_size);
+//     HANDLE_ERROR(cudaDeviceSynchronize());
 
-    HANDLE_ERROR(cudaMemcpy(arr + left, gpu_arr, (right - left + 1) * sizeof(int), cudaMemcpyDeviceToHost));
-    cudaFree(gpu_arr);
-    cudaFree(gpu_left_arry);
-    cudaFree(gpu_right_arry);
-}
+//     HANDLE_ERROR(cudaMemcpy(arr + left, gpu_arr, (right - left + 1) * sizeof(int), cudaMemcpyDeviceToHost));
+//     cudaFree(gpu_arr);
+//     cudaFree(gpu_left_arry);
+//     cudaFree(gpu_right_arry);
+// }
 
 __global__ void merge(int *arr, int *tmp, int64_t left, int64_t mid, int64_t right) {
     int i = left;
@@ -97,20 +97,15 @@ __global__ void mergesort(int *arr, int *tmp, int64_t const begin, int64_t const
     }
 
     int64_t mid = begin + (end - begin) / 2;
-    // printf("begin : %lu, mid : %lu, end : %lu, array[b] : %d, array[m] : %d, array[e] : %d\n", begin, mid, end, arr[begin], arr[mid], arr[end]);
 
     mergesort<<<1, 1>>>(arr, tmp, begin, mid);
-    mergesort<<<1, 1>>>(arr, tmp, mid + 1, end);
-    HANDLE_ERROR(cudaDeviceSynchronize());
+    cudaDeviceSynchronize();
 
-    // printf("merge begin\n left array: ");
-    // print_array(arr, mid - begin + 1);
-    // printf("right array: ");
-    // print_array(&arr[mid + 1], end - mid);
+    mergesort<<<1, 1>>>(arr, tmp, mid + 1, end);
+    cudaDeviceSynchronize();
 
     merge<<<1, 1>>>(arr, tmp, begin, mid, end);
-    HANDLE_ERROR(cudaDeviceSynchronize());
-    // print_array(arr, end - begin + 1);
+    cudaDeviceSynchronize();
 }
 
 int main() {
