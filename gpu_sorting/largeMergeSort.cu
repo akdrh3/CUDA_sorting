@@ -89,20 +89,16 @@ __global__ void merge(int *arr, int *tmp, int64_t left, int64_t mid, int64_t rig
     }
 }
 
-__global__ void mergesort(int *arr, int *tmp, int64_t const begin, int64_t const end) {
+void mergesort(int *arr, int *tmp, int64_t const begin, int64_t const end) {
 
     if (begin >= end) {
-        // printf("single element : %lu, array[i] : %d\n", begin, arr[begin]);
         return;
     }
 
     int64_t mid = begin + (end - begin) / 2;
 
-    mergesort<<<1, 1>>>(arr, tmp, begin, mid);
-    cudaDeviceSynchronize();
-
-    mergesort<<<1, 1>>>(arr, tmp, mid + 1, end);
-    cudaDeviceSynchronize();
+    mergesort(arr, tmp, begin, mid);
+    mergesort(arr, tmp, mid + 1, end);
 
     merge<<<1, 1>>>(arr, tmp, begin, mid, end);
     cudaDeviceSynchronize();
@@ -137,7 +133,7 @@ int main() {
     cuda_timer_start(&start, &stop);
     printf("Start Merge Sort . . . \n");
 
-    mergesort<<<1, 1>>>(gpu_arr, gpu_tmp, 0, size_of_array - 1);
+    mergesort(gpu_arr, gpu_tmp, 0, size_of_array - 1);
     HANDLE_ERROR(cudaDeviceSynchronize());
 
     HANDLE_ERROR(cudaMemcpy(number_array, gpu_arr, size_of_array * sizeof(int), cudaMemcpyDeviceToHost));
