@@ -34,6 +34,6 @@ $(MERGESORT_OUTPUT): $(LARGEMERGE_OBJS)
 	$(NVCC) $(NVCCFLAGS) $< -o $@
 
 clean:
-	rm -f $(C_OBJS) $(CUDA_OBJS) $(OUTPUT) $(MERGESORT_OUTPUT)
+	rm -f $(C_OBJS) $(CUDA_OBJS) $(OUTPUT) $(MERGESORT_OUTPUT) merge_error_log.txt mergeoutput.txt
 
 .PHONY: clean
