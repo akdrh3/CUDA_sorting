@@ -86,9 +86,6 @@ void merge(int *arr, int64_t const left, int64_t const mid, int64_t const right)
 
 void mergesort(int *arr, int64_t const begin, int64_t const end) {
 
-    int *gpu_array = NULL;
-    HANDLE_ERROR(cudaMalloc((void **)&gpu_array, (end - begin + 1) * sizeof(int)));
-
     if (begin >= end) {
         printf("single element : %lu, array[i] : %d\n", begin, arr[begin]);
         return;
