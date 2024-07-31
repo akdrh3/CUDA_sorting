@@ -6,18 +6,20 @@ NVCCFLAGS = -c -rdc=true
 
 # Files
 C_FILES = util.c
-CUDA_FILES = gpu_util.cu testQuickSort.cu
+CUDA_FILES = gpu_util.cu testQuickSort.cu largeMergeSort.cu
 
 # Objects
 C_OBJS = $(C_FILES:.c=.o)
 CUDA_OBJS = $(CUDA_FILES:.cu=.o)
-OBJS = $(C_OBJS) $(CUDA_OBJS)
+OBJS = $(C_OBJS) $(filter-out largeMergeSort.o, CUDA_OBJS)
+LARGEMERGE_OBJS = $(C_OBJS) largeMergeSort.o
 
 # Output
 OUTPUT = testQuickSort
+MERGESORT_OUTPUT = mergesort
 
 # Rules
-all: $(OUTPUT)
+all: $(OUTPUT) $(MERGESORT_OUTPUT)
 
 $(OUTPUT): $(OBJS)
 	$(NVCC) $(OBJS) -o $@ -lcudart
@@ -29,6 +31,6 @@ $(OUTPUT): $(OBJS)
 	$(NVCC) $(NVCCFLAGS) $< -o $@
 
 clean:
-	rm -f $(OBJS) $(OUTPUT)
+	rm -f $(OBJS) $(OUTPUT) $(MERGESORT_OUTPUTS)
 
 .PHONY: clean
