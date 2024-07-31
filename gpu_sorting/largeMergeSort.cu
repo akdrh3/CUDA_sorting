@@ -66,23 +66,23 @@ void merge(int *arr, int64_t const left, int64_t const mid, int64_t const right)
 void mergesort(int *arr, int64_t const begin, int64_t const end) {
 
     if (begin >= end) {
-        printf("single element : %lu, array[i] : %d\n", begin, arr[begin]);
+        // printf("single element : %lu, array[i] : %d\n", begin, arr[begin]);
         return;
     }
 
     int64_t mid = begin + (end - begin) / 2;
-    printf("begin : %lu, mid : %lu, end : %lu, array[b] : %d, array[m] : %d, array[e] : %d\n", begin, mid, end, arr[begin], arr[mid], arr[end]);
+    // printf("begin : %lu, mid : %lu, end : %lu, array[b] : %d, array[m] : %d, array[e] : %d\n", begin, mid, end, arr[begin], arr[mid], arr[end]);
 
     mergesort(arr, begin, mid);
     mergesort(arr, mid + 1, end);
 
-    printf("merge begin\n left array: ");
-    print_array(arr, mid - begin + 1);
-    printf("right array: ");
-    print_array(&arr[mid + 1], end - mid);
+    // printf("merge begin\n left array: ");
+    // print_array(arr, mid - begin + 1);
+    // printf("right array: ");
+    // print_array(&arr[mid + 1], end - mid);
 
     merge(arr, begin, mid, end);
-    print_array(arr, end - begin + 1);
+    // print_array(arr, end - begin + 1);
 }
 
 int main() {
@@ -100,8 +100,8 @@ int main() {
     int *number_array = NULL;
     read_from_file(file_name, &number_array, size_of_array);
 
-    print_array(number_array, size_of_array);
-    // start timer
+    // print_array(number_array, size_of_array);
+    //  start timer
     cudaEvent_t start, stop;
     cuda_timer_start(&start, &stop);
     printf("Start Merge Sort . . . \n");
