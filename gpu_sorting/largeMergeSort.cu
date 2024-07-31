@@ -10,7 +10,7 @@ void print_array(int *int_array, int64_t array_size) {
     printf("\n");
 }
 
-__global__ void mergeKernel(int *gpu_arr, int *gpu_left_array, int *gpu_right_array, int64_t left_array_size, int64_t right_array_size) {
+__global__ void old_mergeKernel(int *gpu_arr, int *gpu_left_array, int *gpu_right_array, int64_t left_array_size, int64_t right_array_size) {
 
     int64_t index_of_left_array = 0, index_of_right_array = 0;
     int64_t index_of_merged_array = 0;
@@ -41,7 +41,7 @@ __global__ void mergeKernel(int *gpu_arr, int *gpu_left_array, int *gpu_right_ar
     }
 }
 
-void merge(int *arr, int64_t const left, int64_t const mid, int64_t const right) {
+void old_merge(int *arr, int64_t const left, int64_t const mid, int64_t const right) {
     int64_t const left_array_size = mid - left + 1;
     int64_t const right_array_size = right - mid;
 
@@ -54,7 +54,7 @@ void merge(int *arr, int64_t const left, int64_t const mid, int64_t const right)
     HANDLE_ERROR(cudaMemcpy(gpu_left_arry, arr + left, left_array_size * sizeof(int), cudaMemcpyHostToDevice));
     HANDLE_ERROR(cudaMemcpy(gpu_right_arry, arr + mid + 1, right_array_size * sizeof(int), cudaMemcpyHostToDevice));
 
-    mergeKernel<<<1, 1>>>(gpu_arr, gpu_left_arry, gpu_right_arry, left_array_size, right_array_size);
+    old_mergeKernel<<<1, 1>>>(gpu_arr, gpu_left_arry, gpu_right_arry, left_array_size, right_array_size);
     HANDLE_ERROR(cudaDeviceSynchronize());
 
     HANDLE_ERROR(cudaMemcpy(arr + left, gpu_arr, (right - left + 1) * sizeof(int), cudaMemcpyDeviceToHost));
@@ -63,7 +63,33 @@ void merge(int *arr, int64_t const left, int64_t const mid, int64_t const right)
     cudaFree(gpu_right_arry);
 }
 
-void mergesort(int *arr, int64_t const begin, int64_t const end) {
+__global__ void merge(int *arr, int *tmp, int64_t left, int64_t mid, int64_t right) {
+    int i = left;
+    int j = mid + 1;
+    int k = left;
+
+    while (i <= mid && j <= right) {
+        if (arr[i] <= arr[j]) {
+            tmp[k++] = arr[i++];
+        } else {
+            tmp[k++] = arr[j++];
+        }
+    }
+
+    while (i <= mid) {
+        tmp[k++] = arr[i++];
+    }
+
+    while (j <= right) {
+        tmp[k++] = arr[j++];
+    }
+
+    for (i = left; i <= right; i++) {
+        arr[i] = tmp[i];
+    }
+}
+
+__global__ void mergesort(int *arr, int *tmp, int64_t const begin, int64_t const end) {
 
     if (begin >= end) {
         // printf("single element : %lu, array[i] : %d\n", begin, arr[begin]);
@@ -73,23 +99,23 @@ void mergesort(int *arr, int64_t const begin, int64_t const end) {
     int64_t mid = begin + (end - begin) / 2;
     // printf("begin : %lu, mid : %lu, end : %lu, array[b] : %d, array[m] : %d, array[e] : %d\n", begin, mid, end, arr[begin], arr[mid], arr[end]);
 
-    mergesort(arr, begin, mid);
-    mergesort(arr, mid + 1, end);
+    mergesort<<<1, 1>>>(arr, tmp, begin, mid);
+    mergesort<<<1, 1>>>(arr, tmp, mid + 1, end);
+    HANDLE_ERROR(cudaDeviceSynchronize());
 
     // printf("merge begin\n left array: ");
     // print_array(arr, mid - begin + 1);
     // printf("right array: ");
     // print_array(&arr[mid + 1], end - mid);
 
-    merge(arr, begin, mid, end);
+    merge<<<1, 1>>>(arr, tmp, begin, mid, end);
+    HANDLE_ERROR(cudaDeviceSynchronize());
     // print_array(arr, end - begin + 1);
 }
 
 int main() {
 
     // read the numbers from the file into an array in CPU memory.
-    //  const int64_t array_size = 7;
-    //  int numbers[array_size] = {38, 27, 43, 3, 9, 82, 10};
     char file_name[256];
     printf("Enter the file name: \n");
     scanf("%255s", file_name);
@@ -100,20 +126,39 @@ int main() {
     int *number_array = NULL;
     read_from_file(file_name, &number_array, size_of_array);
 
-    // print_array(number_array, size_of_array);
+    printf("initial array : \n");
+    print_array(number_array, size_of_array);
+
+    int *gpu_arr = NULL;
+    int *gpu_tmp = NULL;
+
+    HANDLE_ERROR(cudaMalloc((void **)&gpu_arr, size_of_array * sizeof(int)));
+    HANDLE_ERROR(cudaMalloc((void **)&gpu_tmp, size_of_array * sizeof(int)));
+
+    HANDLE_ERROR(cudaMemcpy(gpu_arr, number_array, size_of_array * sizeof(int), cudaMemcpyHostToDevice));
+
     //  start timer
     cudaEvent_t start, stop;
     cuda_timer_start(&start, &stop);
     printf("Start Merge Sort . . . \n");
 
-    // starting merge sort
-    mergesort(number_array, 0, size_of_array - 1);
+    mergesort<<<1, 1>>>(gpu_arr, gpu_tmp, 0, size_of_array - 1);
+    HANDLE_ERROR(cudaDeviceSynchronize());
+
+    HANDLE_ERROR(cudaMemcpy(number_array, gpu_arr, size_of_array * sizeof(int), cudaMemcpyDeviceToHost));
+
+    printf("Sorted array: \n");
+    print_array(number_array, size_of_array);
 
     // stop timer
     double gpu_sort_time = cuda_timer_stop(start, stop);
     double gpu_sort_time_sec = gpu_sort_time / 1000.0;
 
     printf("Time elipsed for quick sort: %lf s\n", gpu_sort_time_sec);
+
+    HANDLE_ERROR(cudaFree(gpu_arr));
+    HANDLE_ERROR(cudaFree(gpu_tmp));
+    // print_array(number_array, size_of_array);d
 
     // writing back
     free(number_array);
