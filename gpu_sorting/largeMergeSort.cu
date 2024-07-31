@@ -117,9 +117,6 @@ int main() {
     int *number_array = NULL;
     read_from_file(file_name, &number_array, size_of_array);
 
-    printf("initial array : \n");
-    print_array(number_array, size_of_array);
-
     int *gpu_arr = NULL;
     int *gpu_tmp = NULL;
 
@@ -138,8 +135,8 @@ int main() {
 
     HANDLE_ERROR(cudaMemcpy(number_array, gpu_arr, size_of_array * sizeof(int), cudaMemcpyDeviceToHost));
 
-    printf("Sorted array: \n");
-    print_array(number_array, size_of_array);
+    printf("Sorted array last element: \n");
+    print_array(number_array + size_of_array - 2, 2);
 
     // stop timer
     double gpu_sort_time = cuda_timer_stop(start, stop);
