@@ -45,24 +45,6 @@ void merge(int *arr, int64_t const left, int64_t const mid, int64_t const right)
     int64_t const left_array_size = mid - left + 1;
     int64_t const right_array_size = right - mid;
 
-    // printf("merging begin : %lu, mid : %lu, end : %lu, array[b] : %d, array[m] : %d, array[e] : %d\n", left, mid, right, arr[left], arr[mid], arr[right]);
-
-    int *left_array = (int *)malloc(left_array_size * sizeof(int));
-    int *right_array = (int *)malloc(right_array_size * sizeof(int));
-
-    // // copy data to temp arrays
-    // for (int64_t i = 0; i < left_array_size; i++) {
-    //     left_array[i] = arr[left + i];
-    // }
-    // for (int64_t j = 0; j < right_array_size; j++) {
-    //     right_array[j] = arr[mid + 1 + j];
-    // }
-
-    printf("merge begin\n left array: ");
-    print_array(left_array, left_array_size);
-    printf("right array: ");
-    print_array(right_array, right_array_size);
-
     int *gpu_arr, *gpu_left_arry, *gpu_right_arry;
 
     HANDLE_ERROR(cudaMalloc((void **)&gpu_arr, (right - left + 1) * sizeof(int)));
@@ -79,9 +61,6 @@ void merge(int *arr, int64_t const left, int64_t const mid, int64_t const right)
     cudaFree(gpu_arr);
     cudaFree(gpu_left_arry);
     cudaFree(gpu_right_arry);
-
-    free(left_array);
-    free(right_array);
 }
 
 void mergesort(int *arr, int64_t const begin, int64_t const end) {
@@ -96,6 +75,12 @@ void mergesort(int *arr, int64_t const begin, int64_t const end) {
 
     mergesort(arr, begin, mid);
     mergesort(arr, mid + 1, end);
+
+    printf("merge begin\n left array: ");
+    print_array(arr, mid - begin + 1);
+    printf("right array: ");
+    print_array(&arr[mid + 1], end - mid);
+
     merge(arr, begin, mid, end);
     print_array(arr, end - begin + 1);
 }
