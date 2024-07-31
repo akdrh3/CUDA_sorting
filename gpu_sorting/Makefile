@@ -2,7 +2,7 @@
 CC = gcc
 CFLAGS = -c -std=c99 -Wall -Wextra -I.
 NVCC = /usr/local/cuda/bin/nvcc
-NVCCFLAGS = -c -rdc=true
+NVCCFLAGS = -c -rdc=true -I
 
 # Files
 C_FILES = util.c
@@ -12,7 +12,7 @@ CUDA_FILES = gpu_util.cu testQuickSort.cu largeMergeSort.cu
 C_OBJS = $(C_FILES:.c=.o)
 CUDA_OBJS = $(CUDA_FILES:.cu=.o)
 OBJS = $(C_OBJS) $(filter-out largeMergeSort.o, $(CUDA_OBJS))
-LARGEMERGE_OBJS = $(C_OBJS) largeMergeSort.o
+LARGEMERGE_OBJS = $(C_OBJS) gpu_util.o largeMergeSort.o
 
 # Output
 OUTPUT = testQuickSort
@@ -34,6 +34,6 @@ $(MERGESORT_OUTPUT): $(LARGEMERGE_OBJS)
 	$(NVCC) $(NVCCFLAGS) $< -o $@
 
 clean:
-	rm -f $(OBJS) $(OUTPUT) $(MERGESORT_OUTPUTS)
+	rm -f $(C_OBJS) $(OBJS) $(OUTPUT) $(MERGESORT_OUTPUTS)
 
 .PHONY: clean
