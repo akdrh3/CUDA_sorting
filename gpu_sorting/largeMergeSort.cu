@@ -75,7 +75,7 @@ void merge(int *arr, int64_t const left, int64_t const mid, int64_t const right)
     mergeKernel<<<1, 1>>>(gpu_arr, gpu_left_arry, gpu_right_arry, left_array_size, right_array_size, left);
     HANDLE_ERROR(cudaDeviceSynchronize());
 
-        HANDLE_ERROR(cudaMemcpy(&arr[left], &gpu_arr[left], (right - left + 1) * sizeof(int), cudaMemcpyDeviceToHost));
+    HANDLE_ERROR(cudaMemcpy(arr + left, gpu_arr, (right - left + 1) * sizeof(int), cudaMemcpyDeviceToHost));
     cudaFree(gpu_arr);
     cudaFree(gpu_left_arry);
     cudaFree(gpu_right_arry);
@@ -85,6 +85,10 @@ void merge(int *arr, int64_t const left, int64_t const mid, int64_t const right)
 }
 
 void mergesort(int *arr, int64_t const begin, int64_t const end) {
+
+    int *gpu_array = NULL;
+    HANDLE_ERROR(cudaMalloc((void **)&gpu_array, (end - begin + 1) * sizeof(int)));
+
     if (begin >= end) {
         printf("single element : %lu, array[i] : %d\n", begin, arr[begin]);
         return;
@@ -114,20 +118,23 @@ int main() {
     int *number_array = NULL;
     read_from_file(file_name, &number_array, size_of_array);
 
-    // print_array(number_array, size_of_array);
+    print_array(number_array, size_of_array);
     // start timer
     cudaEvent_t start, stop;
     cuda_timer_start(&start, &stop);
     printf("Start Merge Sort . . . \n");
 
     // starting merge sort
-    mergesort(number_array, 0, size_of_array);
+    mergesort(number_array, 0, size_of_array - 1);
 
     // stop timer
     double gpu_sort_time = cuda_timer_stop(start, stop);
     double gpu_sort_time_sec = gpu_sort_time / 1000.0;
 
+    printf("Time elipsed for quick sort: %lf s\n", gpu_sort_time_sec);
+
     // writing back
+    free(number_array);
 
     return 0;
 }
