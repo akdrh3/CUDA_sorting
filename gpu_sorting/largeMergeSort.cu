@@ -10,10 +10,10 @@ void print_array(int *int_array, int64_t array_size) {
     printf("\n");
 }
 
-__global__ void mergeKernel(int *gpu_arr, int *gpu_left_array, int *gpu_right_array, int64_t left_array_size, int64_t right_array_size, int64_t start_index) {
+__global__ void mergeKernel(int *gpu_arr, int *gpu_left_array, int *gpu_right_array, int64_t left_array_size, int64_t right_array_size) {
 
     int64_t index_of_left_array = 0, index_of_right_array = 0;
-    int64_t index_of_merged_array = start_index;
+    int64_t index_of_merged_array = 0;
 
     // Merge the temp arrays back into arr
     while (index_of_left_array < left_array_size && index_of_right_array < right_array_size) {
@@ -50,13 +50,13 @@ void merge(int *arr, int64_t const left, int64_t const mid, int64_t const right)
     int *left_array = (int *)malloc(left_array_size * sizeof(int));
     int *right_array = (int *)malloc(right_array_size * sizeof(int));
 
-    // copy data to temp arrays
-    for (int64_t i = 0; i < left_array_size; i++) {
-        left_array[i] = arr[left + i];
-    }
-    for (int64_t j = 0; j < right_array_size; j++) {
-        right_array[j] = arr[mid + 1 + j];
-    }
+    // // copy data to temp arrays
+    // for (int64_t i = 0; i < left_array_size; i++) {
+    //     left_array[i] = arr[left + i];
+    // }
+    // for (int64_t j = 0; j < right_array_size; j++) {
+    //     right_array[j] = arr[mid + 1 + j];
+    // }
 
     printf("merge begin\n left array: ");
     print_array(left_array, left_array_size);
@@ -69,10 +69,10 @@ void merge(int *arr, int64_t const left, int64_t const mid, int64_t const right)
     HANDLE_ERROR(cudaMalloc((void **)&gpu_left_arry, left_array_size * sizeof(int)));
     HANDLE_ERROR(cudaMalloc((void **)&gpu_right_arry, right_array_size * sizeof(int)));
 
-    HANDLE_ERROR(cudaMemcpy(gpu_left_arry, left_array, left_array_size * sizeof(int), cudaMemcpyHostToDevice));
-    HANDLE_ERROR(cudaMemcpy(gpu_right_arry, right_array, right_array_size * sizeof(int), cudaMemcpyHostToDevice));
+    HANDLE_ERROR(cudaMemcpy(gpu_left_arry, arr + left, left_array_size * sizeof(int), cudaMemcpyHostToDevice));
+    HANDLE_ERROR(cudaMemcpy(gpu_right_arry, arr + mid + 1, right_array_size * sizeof(int), cudaMemcpyHostToDevice));
 
-    mergeKernel<<<1, 1>>>(gpu_arr, gpu_left_arry, gpu_right_arry, left_array_size, right_array_size, left);
+    mergeKernel<<<1, 1>>>(gpu_arr, gpu_left_arry, gpu_right_arry, left_array_size, right_array_size);
     HANDLE_ERROR(cudaDeviceSynchronize());
 
     HANDLE_ERROR(cudaMemcpy(arr + left, gpu_arr, (right - left + 1) * sizeof(int), cudaMemcpyDeviceToHost));
