@@ -142,7 +142,7 @@ int main() {
     double gpu_sort_time = cuda_timer_stop(start, stop);
     double gpu_sort_time_sec = gpu_sort_time / 1000.0;
 
-    printf("Time elipsed for quick sort: %lf s\n", gpu_sort_time_sec);
+    printf("Time elipsed for merge sort: %lf s\n", gpu_sort_time_sec);
 
     HANDLE_ERROR(cudaFree(gpu_arr));
     HANDLE_ERROR(cudaFree(gpu_tmp));
