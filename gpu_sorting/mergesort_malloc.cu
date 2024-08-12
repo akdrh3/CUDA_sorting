@@ -120,10 +120,10 @@ int main() {
     int *gpu_arr = NULL;
     int *gpu_tmp = NULL;
 
-    HANDLE_ERROR(cudaMallocManaged((void **)&gpu_arr, size_of_array * sizeof(int)));
-    HANDLE_ERROR(cudaMallocManaged((void **)&gpu_tmp, size_of_array * sizeof(int)));
+    HANDLE_ERROR(cudaMalloc((void **)&gpu_arr, size_of_array * sizeof(int)));
+    HANDLE_ERROR(cudaMalloc((void **)&gpu_tmp, size_of_array * sizeof(int)));
 
-    memcpy(gpu_arr, number_array, size_of_array * sizeof(int));
+    HANDLE_ERROR(cudaMemcpy(gpu_arr, number_array, size_of_array * sizeof(int), cudaMemcpyHostToDevice));
 
     //  start timer
     cudaEvent_t start, stop;
@@ -133,7 +133,7 @@ int main() {
     mergesort(gpu_arr, gpu_tmp, 0, size_of_array - 1);
     HANDLE_ERROR(cudaDeviceSynchronize());
 
-    // memcpy(number_array, gpu_arr, size_of_array * sizeof(int));
+    HANDLE_ERROR(cudaMemcpy(number_array, gpu_arr, size_of_array * sizeof(int), cudaMemcpyDeviceToHost));
 
     // printf("Sorted array last element: \n");
     // print_array(number_array + size_of_array - 2, 2);
