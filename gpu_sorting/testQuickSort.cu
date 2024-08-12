@@ -78,10 +78,10 @@ int main() {
 
     // Allocate memory on the GPU.
     int *gpu_number_array = NULL;
-    HANDLE_ERROR(cudaMalloc(&gpu_number_array, sizeof(int) * size_of_array));
+    HANDLE_ERROR(cudaMallocManaged(&gpu_number_array, sizeof(int) * size_of_array));
 
     // Copy the array from CPU memory to GPU memory.
-    HANDLE_ERROR(cudaMemcpy(gpu_number_array, number_array, sizeof(int) * size_of_array, cudaMemcpyHostToDevice));
+    memcpy(gpu_number_array, number_array, sizeof(int) * size_of_array);
 
     // starting quick sort
     quickSortKernel<<<1, 1>>>(gpu_number_array, 0, size_of_array - 1);
