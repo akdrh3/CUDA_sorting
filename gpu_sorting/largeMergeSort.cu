@@ -49,11 +49,18 @@ __global__ void mergeSortKernel(int* arr, int* tmp, int left, int right, int chu
     int mid = min(currentChunk + chunkSize / 2 - 1, right);
     int end = min(currentChunk + chunkSize - 1, right);
 
+    // Boundary check to avoid illegal memory access
+    if (currentChunk >= right)
+    {
+        return; // Ignore out-of-bounds threads
+    }
+
     if (currentChunk < end)
     {
         merge(arr, tmp, currentChunk, mid, end);
     }
 }
+
 
 void mergesort(int* arr, int* tmp, int left, int right, int threadsPerBlock)
 {
@@ -63,9 +70,10 @@ void mergesort(int* arr, int* tmp, int left, int right, int threadsPerBlock)
     for (int chunkSize = 2; chunkSize <= right - left + 1; chunkSize *= 2)
     {
         mergeSortKernel<<<gridSize, blockSize>>>(arr, tmp, left, right, chunkSize);
-        cudaDeviceSynchronize();
+        HANDLE_ERROR(cudaDeviceSynchronize());  // Synchronize after each kernel launch
     }
 }
+
 
 int main() 
 {
