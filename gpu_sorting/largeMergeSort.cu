@@ -67,6 +67,65 @@ void mergesort(int* arr, int* tmp, int left, int right, int threadsPerBlock)
     }
 }
 
+int main() {
+
+    // read the numbers from the file into an array in CPU memory.
+    char file_name[256];
+    printf("Enter the file name: \n");
+    scanf("%255s", file_name);
+
+    uint64_t size_of_array = count_size_of_file(file_name);
+    printf("Number of integers in the file : %lu\n", size_of_array);
+
+    int *number_array = NULL;
+    read_from_file(file_name, &number_array, size_of_array);
+
+    
+    int thread_option[5] = {1, 256, 512,768, 1024};
+
+    for (int i = 0; i < 5; i++){
+
+        int thread_per_block = thread_option[i];
+        int *gpu_arr = NULL;
+        int *gpu_tmp = NULL;
+
+        HANDLE_ERROR(cudaMallocManaged((void **)&gpu_arr, size_of_array * sizeof(int)));
+        HANDLE_ERROR(cudaMallocManaged((void **)&gpu_tmp, size_of_array * sizeof(int)));
+
+        memcpy(gpu_arr, number_array, size_of_array * sizeof(int));
+
+        //  start timer
+        cudaEvent_t start, stop;
+        cuda_timer_start(&start, &stop);
+        printf("Start Merge Sort . . . \n\n");
+
+        mergesort(gpu_arr, gpu_tmp, 0, size_of_array - 1, thread_per_block);
+       // HANDLE_ERROR(cudaDeviceSynchronize());
+
+        // memcpy(number_array, gpu_arr, size_of_array * sizeof(int));
+
+        // printf("Sorted array last element: \n");
+        // print_array(number_array + size_of_array - 2, 2);
+
+        double gpu_sort_time = cuda_timer_stop(start, stop);
+        double gpu_sort_time_sec = gpu_sort_time / 1000.0;
+
+        printf("Time elapsed for merge sort with %d threads: %lf s\n", thread_per_block, gpu_sort_time_sec);
+
+        HANDLE_ERROR(cudaFree(gpu_arr));
+        HANDLE_ERROR(cudaFree(gpu_tmp));
+
+
+    }
+
+    // print_array(number_array, size_of_array);d
+
+    // writing back
+    free(number_array);
+
+    return 0;
+}
+
 
 // __global__ void merge(int *arr, int *tmp, int64_t left, int64_t mid, int64_t right) {
 //     int i = left;
@@ -108,62 +167,3 @@ void mergesort(int* arr, int* tmp, int left, int right, int threadsPerBlock)
 //     merge<<<1, 1>>>(arr, tmp, begin, mid, end);
 //     cudaDeviceSynchronize();
 // }
-
-int main() {
-
-    // read the numbers from the file into an array in CPU memory.
-    char file_name[256];
-    printf("Enter the file name: \n");
-    scanf("%255s", file_name);
-
-    uint64_t size_of_array = count_size_of_file(file_name);
-    printf("Number of integers in the file : %lu\n", size_of_array);
-
-    int *number_array = NULL;
-    read_from_file(file_name, &number_array, size_of_array);
-
-    
-    int thread_option[5] = {1, 256, 512,768, 1024};
-
-    for (int i = 0; i < 5; i++){
-
-        int thread_per_block = thread_option[i];
-        int *gpu_arr = NULL;
-        int *gpu_tmp = NULL;
-
-        HANDLE_ERROR(cudaMallocManaged((void **)&gpu_arr, size_of_array * sizeof(int)));
-        HANDLE_ERROR(cudaMallocManaged((void **)&gpu_tmp, size_of_array * sizeof(int)));
-
-        memcpy(gpu_arr, number_array, size_of_array * sizeof(int));
-
-        //  start timer
-        cudaEvent_t start, stop;
-        cuda_timer_start(&start, &stop);
-        printf("Start Merge Sort . . . \n\n");
-
-        mergesort(gpu_arr, gpu_tmp, 0, size_of_array - 1, thread_per_block);
-        HANDLE_ERROR(cudaDeviceSynchronize());
-
-        // memcpy(number_array, gpu_arr, size_of_array * sizeof(int));
-
-        // printf("Sorted array last element: \n");
-        // print_array(number_array + size_of_array - 2, 2);
-
-        double gpu_sort_time = cuda_timer_stop(start, stop);
-        double gpu_sort_time_sec = gpu_sort_time / 1000.0;
-
-        printf("Time elapsed for merge sort with %d threads: %lf s\n", thread_per_block, gpu_sort_time_sec);
-
-        HANDLE_ERROR(cudaFree(gpu_arr));
-        HANDLE_ERROR(cudaFree(gpu_tmp));
-
-
-    }
-
-    // print_array(number_array, size_of_array);d
-
-    // writing back
-    free(number_array);
-
-    return 0;
-}
