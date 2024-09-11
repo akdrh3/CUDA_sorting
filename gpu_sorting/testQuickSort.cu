@@ -64,17 +64,6 @@ int main() {
 
     int *number_array = NULL;
     read_from_file(file_name, &number_array, size_of_array);
-    // printf("Last element: %d\n", number_array[size_of_array - 1]);
-
-    // const int64_t size_of_array = 40;
-    // int number_array[size_of_array] = {449, 262, 270, 311, 399, 46, 409, 88, 140, 278, 162, 157, 65, 434, 344, 131, 28, 56, 273, 480, 170, 364, 334, 93, 83, 244, 17, 70, 374, 306, 105, 150, 119, 242, 293, 266, 235, 29, 1, 448};
-    // printf("Original array: \n");
-    // print_array(number_array, size_of_array);
-
-    // start timer
-    cudaEvent_t start, stop;
-    cuda_timer_start(&start, &stop);
-    printf("Start Quick Sort . . . \n");
 
     // Allocate memory on the GPU.
     int *gpu_number_array = NULL;
@@ -83,20 +72,32 @@ int main() {
     // Copy the array from CPU memory to GPU memory.
     memcpy(gpu_number_array, number_array, sizeof(int) * size_of_array);
 
-    // starting quick sort
-    quickSortKernel<<<1, 1>>>(gpu_number_array, 0, size_of_array - 1);
-    HANDLE_ERROR(cudaDeviceSynchronize());
+    // Thread options array
+    int threads_options[5] = {1, 256, 512, 768, 1024};
 
-    // stop timer
-    double gpu_sort_time = cuda_timer_stop(start, stop);
-    double gpu_sort_time_sec = gpu_sort_time / 1000.0;
+    // Iterate through each thread configuration
+    for (int i = 0; i < 5; ++i) {
+        int threadsPerBlock = threads_options[i];
+        int blocksPerGrid = (size_of_array + threadsPerBlock - 1) / threadsPerBlock;
 
-    // writing back
-    // HANDLE_ERROR(cudaMemcpy(number_array, gpu_number_array, sizeof(int) * size_of_array, cudaMemcpyDeviceToHost));
-    // printf("Sorted array: \n");
-    // print_array(number_array, size_of_array);
+        // Print current configuration
+        printf("Running QuickSort with %d threads per block...\n", threadsPerBlock);
 
-    printf("Time elipsed for quick sort: %lf s\n", gpu_sort_time_sec);
+        // start timer
+        cudaEvent_t start, stop;
+        cuda_timer_start(&start, &stop);
+
+        // Launch kernel with different thread configurations
+        quickSortKernel<<<blocksPerGrid, threadsPerBlock>>>(gpu_number_array, 0, size_of_array - 1);
+        HANDLE_ERROR(cudaDeviceSynchronize());
+
+        // stop timer
+        double gpu_sort_time = cuda_timer_stop(start, stop);
+        double gpu_sort_time_sec = gpu_sort_time / 1000.0;
+
+        // Print elapsed time for the current configuration
+        printf("Time elapsed for %d threads per block: %lf s\n", threadsPerBlock, gpu_sort_time_sec);
+    }
 
     HANDLE_ERROR(cudaFree(gpu_number_array));
     free(number_array);
