@@ -5,6 +5,13 @@ extern "C" {
 #include "util.h"
 }
 
+void print_array(int *int_array, int64_t array_size) {
+    for (int64_t i = 0; i < array_size; ++i) {
+        printf("%d ", int_array[i]);
+    }
+    printf("\n");
+} 
+
 __device__ void swap(int *a, int *b) {
     int tmp = 0;
     tmp = *a;
@@ -125,7 +132,7 @@ int main() {
         printf("Time elapsed for %d threads per block: %lf s\n\n", threadsPerBlock, gpu_sort_time_sec);
 
         // Optionally print sorted array
-        gpu_print_array(gpu_number_array, size_of_array);
+        print_array(gpu_number_array, size_of_array);
 
         // Free GPU memory for this iteration
         HANDLE_ERROR(cudaFree(gpu_number_array));
