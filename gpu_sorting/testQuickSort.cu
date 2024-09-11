@@ -105,8 +105,8 @@ int main() {
 
     int *number_array = NULL;
     read_from_file(file_name, &number_array, size_of_array);
-    printf("initial array : ");
-    print_array(number_array, size_of_array);
+    //printf("initial array : ");
+    //print_array(number_array, size_of_array);
 
     // Allocate memory on the GPU.
     int *gpu_number_array = NULL;
@@ -121,18 +121,18 @@ int main() {
     // Iterate through each thread configuration
     for (int i = 0; i < 5; ++i) {
         // Re-allocate memory on the GPU for each iteration
-        printf("Re-allocate memory on the GPU for each iteration");
+        printf("Re-allocate memory on the GPU for each iteration\n");
         HANDLE_ERROR(cudaMallocManaged(&gpu_number_array, sizeof(int) * size_of_array));
 
         // Copy the array from CPU memory to GPU memory.
-        printf("Copy the array from CPU memory to GPU memory.");
+        printf("Copy the array from CPU memory to GPU memory.\n");
         memcpy(gpu_number_array, number_array, sizeof(int) * size_of_array);
 
         int threadsPerBlock = threads_options[i];
         int blocksPerGrid = (size_of_array + threadsPerBlock - 1) / threadsPerBlock;
 
         // Print current configuration
-        printf("Running QuickSort with %d threads per block and %d blockers per grid...\n", threadsPerBlock, blocksPerGrid);
+        printf("Running QuickSort with %d threads per block and %d blockers per grid...\n\n", threadsPerBlock, blocksPerGrid);
 
         // Start timer
         cudaEvent_t start, stop;
@@ -147,7 +147,7 @@ int main() {
         double gpu_sort_time_sec = gpu_sort_time / 1000.0;
 
         // Optionally print sorted array
-        print_array(gpu_number_array, size_of_array);
+        //print_array(gpu_number_array, size_of_array);
 
         // Print elapsed time for the current configuration
         printf("Time elapsed for %d threads per block: %lf s\n\n", threadsPerBlock, gpu_sort_time_sec);
