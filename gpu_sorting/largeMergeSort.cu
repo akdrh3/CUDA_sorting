@@ -50,9 +50,9 @@ __global__ void mergeSortKernel(int* arr, int* tmp, int left, int right, int chu
     int end = min(currentChunk + chunkSize - 1, right);
 
     // Boundary check to avoid illegal memory access
-    if (currentChunk >= right)
+    if (currentChunk >= right || currentChunk < left)
     {
-        return; // Ignore out-of-bounds threads
+        return;  // Ignore out-of-bounds threads
     }
 
     if (currentChunk < end)
@@ -66,6 +66,7 @@ void mergesort(int* arr, int* tmp, int left, int right, int threadsPerBlock)
 {
     int blockSize = threadsPerBlock;
     int gridSize = (right - left + 1 + blockSize - 1) / blockSize;
+    printf("blockSize : %d, gridSize : %d", blockSize, gridSize);
 
     for (int chunkSize = 2; chunkSize <= right - left + 1; chunkSize *= 2)
     {
