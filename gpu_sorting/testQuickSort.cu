@@ -128,11 +128,11 @@ int main() {
         double gpu_sort_time = cuda_timer_stop(start, stop);
         double gpu_sort_time_sec = gpu_sort_time / 1000.0;
 
-        // Print elapsed time for the current configuration
-        printf("Time elapsed for %d threads per block: %lf s\n\n", threadsPerBlock, gpu_sort_time_sec);
-
         // Optionally print sorted array
         print_array(gpu_number_array, size_of_array);
+        
+        // Print elapsed time for the current configuration
+        printf("Time elapsed for %d threads per block: %lf s\n\n", threadsPerBlock, gpu_sort_time_sec);
 
         // Free GPU memory for this iteration
         HANDLE_ERROR(cudaFree(gpu_number_array));
