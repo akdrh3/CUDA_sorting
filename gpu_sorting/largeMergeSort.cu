@@ -117,6 +117,7 @@ int main()
         mergesort(gpu_arr, gpu_tmp, 0, size_of_array - 1, threads_per_block);
         HANDLE_ERROR(cudaDeviceSynchronize());
 
+        print_array(gpu_arr, size_of_array);
         // Stop timer
         double gpu_sort_time = cuda_timer_stop(start, stop);
         double gpu_sort_time_sec = gpu_sort_time / 1000.0;
