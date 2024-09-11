@@ -77,6 +77,13 @@ int main() {
 
     // Iterate through each thread configuration
     for (int i = 0; i < 5; ++i) {
+
+        // Allocate memory on the GPU.
+        int *gpu_number_array = NULL;
+        HANDLE_ERROR(cudaMallocManaged(&gpu_number_array, sizeof(int) * size_of_array));
+
+        // Copy the array from CPU memory to GPU memory.
+        memcpy(gpu_number_array, number_array, sizeof(int) * size_of_array);
         int threadsPerBlock = threads_options[i];
         int blocksPerGrid = (size_of_array + threadsPerBlock - 1) / threadsPerBlock;
 
@@ -97,9 +104,11 @@ int main() {
 
         // Print elapsed time for the current configuration
         printf("Time elapsed for %d threads per block: %lf s\n\n", threadsPerBlock, gpu_sort_time_sec);
+        gpu_print_array(gpu_number_array, size_of_array);
+        HANDLE_ERROR(cudaFree(gpu_number_array));
     }
 
-    HANDLE_ERROR(cudaFree(gpu_number_array));
+    
     free(number_array);
 
     return 0;
