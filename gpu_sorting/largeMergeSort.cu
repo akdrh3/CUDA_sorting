@@ -66,7 +66,7 @@ void mergesort(int* arr, int* tmp, int left, int right, int threadsPerBlock)
 {
     int blockSize = threadsPerBlock;
     int gridSize = (right - left + 1 + blockSize - 1) / blockSize;
-    printf("blockSize : %d, gridSize : %d", blockSize, gridSize);
+    printf("blockSize : %d, gridSize : %d\n", blockSize, gridSize);
 
     for (int chunkSize = 2; chunkSize <= right - left + 1; chunkSize *= 2)
     {
