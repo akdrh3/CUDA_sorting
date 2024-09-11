@@ -105,6 +105,8 @@ int main() {
 
     int *number_array = NULL;
     read_from_file(file_name, &number_array, size_of_array);
+    printf("initial array : ");
+    print_array(number_array, size_of_array);
 
     // Allocate memory on the GPU.
     int *gpu_number_array = NULL;
@@ -143,7 +145,7 @@ int main() {
         double gpu_sort_time_sec = gpu_sort_time / 1000.0;
 
         // Optionally print sorted array
-        //print_array(gpu_number_array, size_of_array);
+        print_array(gpu_number_array, size_of_array);
 
         // Print elapsed time for the current configuration
         printf("Time elapsed for %d threads per block: %lf s\n\n", threadsPerBlock, gpu_sort_time_sec);

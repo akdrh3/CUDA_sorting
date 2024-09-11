@@ -9,7 +9,7 @@ print("generating ... ")
 start_time = time.time()
 
 f = open("numbers.txt", "w")
-data_size = input_a * 1000000
+data_size = input_a * 10 ##1000000
 parse = math.ceil(data_size/5)
 for i in range(0,input_a * 1000000):
     num = r.randint(0,2000000000)
