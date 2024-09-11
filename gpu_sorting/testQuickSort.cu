@@ -125,7 +125,7 @@ int main() {
         printf("Time elapsed for %d threads per block: %lf s\n\n", threadsPerBlock, gpu_sort_time_sec);
 
         // Optionally print sorted array
-        print_array(gpu_number_array, size_of_array);
+        gpu_print_array(gpu_number_array, size_of_array);
 
         // Free GPU memory for this iteration
         HANDLE_ERROR(cudaFree(gpu_number_array));
