@@ -105,27 +105,19 @@ int main() {
 
     int *number_array = NULL;
     read_from_file(file_name, &number_array, size_of_array);
-    //printf("initial array : ");
-    //print_array(number_array, size_of_array);
-    for (int k = size_of_array - 20; k < size_of_array; ++k){
-        printf("%d, ", number_array[k]);
-    }
+    // for (int k = size_of_array - 20; k < size_of_array; ++k){
+    //     printf("%d, ", number_array[k]);
+    // }
 
     // Allocate memory on the GPU.
     int *gpu_number_array = NULL;
     HANDLE_ERROR(cudaMallocManaged(&gpu_number_array, sizeof(int) * size_of_array));
-
-    // Copy the array from CPU memory to GPU memory.
-    memcpy(gpu_number_array, number_array, sizeof(int) * size_of_array);
 
     // Thread options array
     int threads_options[5] = {1, 256, 512, 768, 1024};
 
     // Iterate through each thread configuration
     for (int i = 0; i < 5; ++i) {
-        // Re-allocate memory on the GPU for each iteration
-        printf("\nRe-allocate memory on the GPU for each iteration\n");
-        HANDLE_ERROR(cudaMallocManaged(&gpu_number_array, sizeof(int) * size_of_array));
 
         // Copy the array from CPU memory to GPU memory.
         printf("Copy the array from CPU memory to GPU memory.\n");
@@ -135,7 +127,7 @@ int main() {
         int blocksPerGrid = (size_of_array + threadsPerBlock - 1) / threadsPerBlock;
 
         // Print current configuration
-        printf("Running QuickSort with %d threads per block and %d blockers per grid...\n\n", threadsPerBlock, blocksPerGrid);
+        printf("Running QuickSort with %d threads per block and %d blocks per grid...\n", threadsPerBlock, blocksPerGrid);
 
         // Start timer
         cudaEvent_t start, stop;
@@ -151,17 +143,18 @@ int main() {
 
         // Optionally print sorted array
         //print_array(gpu_number_array, size_of_array);
-        for (int k = size_of_array - 20; k < size_of_array; ++k){
-            printf("%d, ", gpu_number_array[k]);
-        }
+        // for (int k = size_of_array - 20; k < size_of_array; ++k){
+        //     printf("%d, ", gpu_number_array[k]);
+        // }
 
         // Print elapsed time for the current configuration
-        printf("\nTime elapsed for %d threads per block: %lf s\n\n", threadsPerBlock, gpu_sort_time_sec);
+        printf("Time elapsed for %d threads per block: %lf s\n\n", threadsPerBlock, gpu_sort_time_sec);
 
-        // Free GPU memory for this iteration
-        HANDLE_ERROR(cudaFree(gpu_number_array));
+
     }
-
+    
+    // Free GPU memory for this iteration
+    HANDLE_ERROR(cudaFree(gpu_number_array));
     // Free the host memory
     free(number_array);
 
