@@ -96,7 +96,7 @@ int main() {
         double gpu_sort_time_sec = gpu_sort_time / 1000.0;
 
         // Print elapsed time for the current configuration
-        printf("Time elapsed for %d threads per block: %lf s\n", threadsPerBlock, gpu_sort_time_sec);
+        printf("Time elapsed for %d threads per block: %lf s\n\n", threadsPerBlock, gpu_sort_time_sec);
     }
 
     HANDLE_ERROR(cudaFree(gpu_number_array));
