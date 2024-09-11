@@ -121,23 +121,25 @@ int main() {
     // Iterate through each thread configuration
     for (int i = 0; i < 5; ++i) {
         // Re-allocate memory on the GPU for each iteration
+        printf("Re-allocate memory on the GPU for each iteration");
         HANDLE_ERROR(cudaMallocManaged(&gpu_number_array, sizeof(int) * size_of_array));
 
         // Copy the array from CPU memory to GPU memory.
+        printf("Copy the array from CPU memory to GPU memory.");
         memcpy(gpu_number_array, number_array, sizeof(int) * size_of_array);
 
         int threadsPerBlock = threads_options[i];
         int blocksPerGrid = (size_of_array + threadsPerBlock - 1) / threadsPerBlock;
 
         // Print current configuration
-        printf("Running QuickSort with %d threads per block...\n", threadsPerBlock);
+        printf("Running QuickSort with %d threads per block and %d blockers per grid...\n", threadsPerBlock, blocksPerGrid);
 
         // Start timer
         cudaEvent_t start, stop;
         cuda_timer_start(&start, &stop);
 
         // Launch kernel with different thread configurations
-        quickSortKernel<<<blocksPerGrid, threadsPerBlock, sizeof(int64_t) * size_of_array>>>(gpu_number_array, size_of_array);
+        quickSortKernel<<<blocksPerGrid, threadsPerBlock>>>(gpu_number_array, size_of_array);
         HANDLE_ERROR(cudaDeviceSynchronize());
 
         // Stop timer
