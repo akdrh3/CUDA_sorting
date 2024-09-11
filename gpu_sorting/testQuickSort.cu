@@ -42,43 +42,57 @@ __device__ int64_t partition(int *arr, int64_t low, int64_t high) {
 }
 
 __global__ void quickSortKernel(int *arr, int64_t size) {
-    // Dynamically allocate stack based on the size of the array using shared memory
-    extern __shared__ int64_t stack[];
+    extern __shared__ int64_t stack[];  // Shared memory for the stack
     int64_t top = -1;
 
-    // Push initial low and high indexes
-    top++;
-    stack[top] = 0;
-    top++;
-    stack[top] = size - 1;
-
-    // Keep popping from the stack while it's not empty
-    while (top >= 0) {
-        int64_t high = stack[top];
-        top--;
-        int64_t low = stack[top];
-        top--;
-
-        // Partition the array
-        int64_t pi = partition(arr, low, high);
-
-        // Push left side to stack if needed
-        if (pi - 1 > low) {
+    // Each thread handles a different part of the array
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx < size) {
+        // Push initial low and high indexes for each thread
+        if (idx == 0) {
             top++;
-            stack[top] = low;
+            stack[top] = 0;
             top++;
-            stack[top] = pi - 1;
+            stack[top] = size - 1;
         }
 
-        // Push right side to stack if needed
-        if (pi + 1 < high) {
-            top++;
-            stack[top] = pi + 1;
-            top++;
-            stack[top] = high;
+        // Synchronize threads
+        __syncthreads();
+
+        while (top >= 0) {
+            int64_t high = stack[top];
+            top--;
+            int64_t low = stack[top];
+            top--;
+
+            // Partition the array
+            int64_t pi = partition(arr, low, high);
+
+            // Synchronize before pushing new values onto the stack
+            __syncthreads();
+
+            // Push left side to stack if needed
+            if (pi - 1 > low) {
+                top++;
+                stack[top] = low;
+                top++;
+                stack[top] = pi - 1;
+            }
+
+            // Push right side to stack if needed
+            if (pi + 1 < high) {
+                top++;
+                stack[top] = pi + 1;
+                top++;
+                stack[top] = high;
+            }
+
+            // Synchronize after partitioning
+            __syncthreads();
         }
     }
 }
+
 
 int main() {
     // Read the numbers from the file into an array in CPU memory.
@@ -130,7 +144,7 @@ int main() {
 
         // Optionally print sorted array
         print_array(gpu_number_array, size_of_array);
-        
+
         // Print elapsed time for the current configuration
         printf("Time elapsed for %d threads per block: %lf s\n\n", threadsPerBlock, gpu_sort_time_sec);
 
