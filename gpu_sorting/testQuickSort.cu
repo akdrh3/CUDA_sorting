@@ -38,20 +38,48 @@ __device__ int64_t partition(int *arr, int64_t low, int64_t high) {
     return i + 1;
 }
 
-__global__ void quickSortKernel(int *arr, int64_t low, int64_t high) {
-    if (low < high) {
+__global__ void quickSortKernel(int *arr, int64_t size) {
+    // Dynamically allocate stack based on the size of the array
+    int64_t *stack = new int64_t[size];  // Dynamically allocated stack for large datasets
+    int64_t top = -1;
+
+    // Push initial low and high indexes
+    top++;
+    stack[top] = 0;
+    top++;
+    stack[top] = size - 1;
+
+    // Keep popping from the stack while it's not empty
+    while (top >= 0) {
+        int64_t high = stack[top];
+        top--;
+        int64_t low = stack[top];
+        top--;
+
+        // Partition the array
         int64_t pi = partition(arr, low, high);
-        quickSortKernel<<<1, 1>>>(arr, low, pi - 1);
-        quickSortKernel<<<1, 1>>>(arr, pi + 1, high);
+
+        // Push left side to stack if needed
+        if (pi - 1 > low) {
+            top++;
+            stack[top] = low;
+            top++;
+            stack[top] = pi - 1;
+        }
+
+        // Push right side to stack if needed
+        if (pi + 1 < high) {
+            top++;
+            stack[top] = pi + 1;
+            top++;
+            stack[top] = high;
+        }
     }
+
+    // Free dynamically allocated stack
+    delete[] stack;
 }
 
-void print_array(int *int_array, int64_t array_size) {
-    for (int64_t i = 0; i < array_size; ++i) {
-        printf("%d ", int_array[i]);
-    }
-    printf("\n");
-}
 
 int main() {
     // // Read the numbers from the file into an array in CPU memory.
