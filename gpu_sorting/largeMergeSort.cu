@@ -115,7 +115,7 @@ int main()
 
         // Run mergesort with the current thread count
         mergesort(gpu_array, gpu_tmp, size_of_array, threads_per_block, gpu_array);
-        HANDLE_ERROR(cudaDeviceSynchronize());
+        //HANDLE_ERROR(cudaDeviceSynchronize());
 
         print_array(gpu_array, size_of_array);
         // Stop timer
