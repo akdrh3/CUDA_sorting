@@ -10,12 +10,18 @@ void print_array(int *int_array, int64_t array_size) {
     printf("\n");
 }
 
+void swap_int_pointer(int *arr_A, int *arr_B){
+    int *tmp_pointer=NULL;
+    tmp_pointer = arr_A;
+    arr_A = tmp;
+    arr_B = tmp_pointer;
+}
+
 __device__ void merge(int* arr, int* tmp, uint64_t start, uint64_t mid, uint64_t end)
 {
-    uint64_t array_a_index = start, array_b_index = mid + 1, temp_index = start;
+    uint64_t array_a_index = start, array_b_index = mid, temp_index = start;
 
-    while (array_a_index <= mid && array_b_index <= end)
-    {
+    while (array_a_index <= mid && array_b_index <= end){
         if (arr[array_a_index] <= arr[array_b_index]){
             tmp[temp_index++] = arr[array_a_index++];
         } 
@@ -24,7 +30,7 @@ __device__ void merge(int* arr, int* tmp, uint64_t start, uint64_t mid, uint64_t
         }
     }
 
-    while (array_a_index <= mid)   {
+    while (array_a_index <= mid){
         tmp[temp_index++] = arr[array_a_index++];
     }
 
@@ -43,16 +49,14 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t right, uint64_t chu
     uint64_t mid = min(starting_index + chunkSize / 2 , right);
     uint64_t end = min(starting_index + chunkSize - 1, right);
 
-    // Boundary check to avoid illegal memory access
-    if (starting_index >= right || starting_index < 0)
-    {
-        return;  // Ignore out-of-bounds threads
+    // Ignore out-of-bounds threads
+    if (starting_index >= right){
+        return;  
     }
 
     printf("tid: %lu, chunkSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, starting_index, mid, end, right);
 
-    if (starting_index < end)
-    {
+    if (starting_index < end){
         merge(arr, tmp, starting_index, mid, end);
     }
 }
@@ -62,16 +66,12 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize)
 {
     int gridSize = (size_of_array + blockSize - 1) / blockSize;
     printf("blockSize : %d, gridSize : %d\n", blockSize, gridSize);
-    int *tmp_pointer=NULL;
 
-    for (uint64_t chunkSize = 2; chunkSize <= size_of_array; chunkSize *= 2)
+    for (uint64_t chunkSize = 2; chunkSize <= size_of_array*2; chunkSize *= 2)
     {
         mergeSortKernel<<<gridSize, blockSize>>>(arr, tmp, size_of_array -1, chunkSize);
         HANDLE_ERROR(cudaDeviceSynchronize());  // Synchronize after each kernel launch
-        tmp_pointer = arr;
-        arr = tmp;
-        tmp = tmp_pointer;
-
+        swap_int_pointer(arr, tmp);
         print_array(arr, size_of_array);
     }
 }
