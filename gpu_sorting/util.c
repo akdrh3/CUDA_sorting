@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void read_from_file(char *file_name, int **numbers, uint64_t size_of_array) {
+void read_from_file_cpu(char *file_name, int **numbers, uint64_t size_of_array) {
     FILE *file = fopen(file_name, "r");
     if (file == NULL) {
         perror("Error opening file");
@@ -24,6 +24,23 @@ void read_from_file(char *file_name, int **numbers, uint64_t size_of_array) {
 
     fclose(file);
 }
+
+void read_from_file(const char *file_name, int *numbers, uint64_t size_of_array){
+    FILE *file = fopen(file_name, "r");
+    if (file == NULL) {
+        perror("Error opening file");
+        exit(EXIT_FAILURE);
+    }
+
+    for (uint64_t i = 0; i < size_of_array; i++){
+        if (fscanf(file, "%d", &numbers[i]) == EOF){
+            perror("Error reading from file");
+            exit(EXIT_FAILURE);            
+        }
+    }
+}
+
+
 
 uint64_t count_size_of_file(char *file_name) {
     FILE *file = fopen(file_name, "r");
