@@ -40,7 +40,7 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t right, uint64_t chu
     uint64_t starting_index = tid * chunkSize; //last tid * chunkSize = size_of_array - chunksize
     
     
-    uint64_t mid = min(starting_index + chunkSize / 2 - 1, right);
+    uint64_t mid = min(starting_index + chunkSize / 2 , right);
     uint64_t end = min(starting_index + chunkSize - 1, right);
 
     // Boundary check to avoid illegal memory access
