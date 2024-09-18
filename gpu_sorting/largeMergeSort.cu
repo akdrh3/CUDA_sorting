@@ -61,11 +61,11 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t right, uint64_t chu
         merge(arr, tmp, starting_index, mid, end);
     }
     printf("arr: ")
-    for (int64_t i = 0; i < right; ++i) {
+    for (int64_t i = 0; i < right; ++i;) {
         printf("%d ", arr[i]);
     }
     printf("\ntmp: ");
-    for (int64_t i = 0; i < right; ++i) {
+    for (int64_t i = 0; i < right; ++i;) {
         printf("%d ", arr[i]);
     }
     printf("\n");
