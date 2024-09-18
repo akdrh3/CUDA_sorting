@@ -89,7 +89,7 @@ int main()
     int *gpu_array = NULL;
     HANDLE_ERROR(cudaMallocManaged((void**)&gpu_array, size_of_array * sizeof(int)));
 
-    read_from_file(file_name, &gpu_array, size_of_array);
+    read_from_file(file_name, gpu_array, size_of_array);
 
     print_array(gpu_array, size_of_array);
 
