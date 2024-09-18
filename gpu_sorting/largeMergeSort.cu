@@ -10,7 +10,7 @@ void print_array(int *int_array, int64_t array_size) {
     printf("\n");
 }
 
-__device__ void merge(int* arr, int* tmp, istart, int mid, int end)
+__device__ void merge(int* arr, int* tmp, uint64_t start, uint64_t mid, uint64_t end)
 {
     uint64_t array_a_index = start, array_b_index = mid + 1, temp_index = start;
 
@@ -44,7 +44,7 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t right, uint64_t chu
     uint64_t end = min(starting_index + chunkSize - 1, right);
 
     // Boundary check to avoid illegal memory access
-    if (starting_index => right || starting_index < 0)
+    if (starting_index >= right || starting_index < 0)
     {
         return;  // Ignore out-of-bounds threads
     }
@@ -58,13 +58,13 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t right, uint64_t chu
 }
 
 
-void mergesort(int* arr, int* tmp, uint64_t size_of_array, int blockSize)
+void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize)
 {
     int gridSize = (size_of_array + blockSize - 1) / blockSize;
     printf("blockSize : %d, gridSize : %d\n", blockSize, gridSize);
     int *tmp_pointer=NULL;
 
-    for (int chunkSize = 2; chunkSize <= size_of_array; chunkSize *= 2)
+    for (uint64_t chunkSize = 2; chunkSize <= size_of_array; chunkSize *= 2)
     {
         mergeSortKernel<<<gridSize, blockSize>>>(arr, tmp, size_of_array -1, chunkSize);
         HANDLE_ERROR(cudaDeviceSynchronize());  // Synchronize after each kernel launch
@@ -111,13 +111,13 @@ int main()
         printf("\nRunning Merge Sort with %d threads per block . . . \n", threads_per_block);
 
         // Calculate the number of blocks needed for the merge step
-        int blocks = (size_of_array + threads_per_block - 1) / threads_per_block;
+        uint64_t blocks = (size_of_array + threads_per_block - 1) / threads_per_block;
 
         // Run mergesort with the current thread count
-        mergesort(gpu_arr, gpu_tmp, size_of_array, threads_per_block);
+        mergesort(gpu_array, gpu_tmp, size_of_array, threads_per_block);
         // HANDLE_ERROR(cudaDeviceSynchronize());
 
-        print_array(gpu_arr, size_of_array);
+        print_array(gpu_array, size_of_array);
         // Stop timer
         double gpu_sort_time = cuda_timer_stop(start, stop);
         double gpu_sort_time_sec = gpu_sort_time / 1000.0;
