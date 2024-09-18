@@ -62,7 +62,7 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t right, uint64_t chu
 }
 
 
-void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize)
+void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, int*gpu_array)
 {
     int gridSize = (size_of_array + blockSize - 1) / blockSize;
     printf("blockSize : %d, gridSize : %d\n", blockSize, gridSize);
@@ -114,7 +114,7 @@ int main()
         printf("\nRunning Merge Sort with %d threads per block . . . \n", threads_per_block);
 
         // Run mergesort with the current thread count
-        mergesort(gpu_array, gpu_tmp, size_of_array, threads_per_block);
+        mergesort(gpu_array, gpu_tmp, size_of_array, threads_per_block, gpu_array);
         HANDLE_ERROR(cudaDeviceSynchronize());
 
         print_array(gpu_array, size_of_array);
