@@ -13,7 +13,7 @@ void print_array(int *int_array, int64_t array_size) {
 void swap_int_pointer(int *arr_A, int *arr_B){
     int *tmp_pointer=NULL;
     tmp_pointer = arr_A;
-    arr_A = tmp;
+    arr_A = arr_B;
     arr_B = tmp_pointer;
 }
 
