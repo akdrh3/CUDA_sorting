@@ -26,7 +26,7 @@ __device__ void merge(int* arr, int* tmp, int left, int mid, int right)
         }
     }
 
-    while (i <= mid)
+    while (i <= mid)   
     {
         tmp[k++] = arr[i++];
     }
@@ -86,92 +86,54 @@ int main()
     uint64_t size_of_array = count_size_of_file(file_name);
     printf("Number of integers in the file: %lu\n", size_of_array);
 
-    int *number_array = NULL;
-    read_from_file(file_name, &number_array, size_of_array);
+    int *gpu_array = NULL;
+    HANDLE_ERROR(cudaMallocManaged((void**)&gpu_array, size_of_array * sizeof(int)));
 
-    // Array to store the different thread counts
-    int threads_options[5] = {1, 256, 512, 768, 1024};
+    read_from_file(file_name, &gpu_array, size_of_array);
 
-    // Loop through each thread count
-    for (int t = 0; t < 5; t++) 
-    {
-        int threads_per_block = threads_options[t];
+    print_array(gpu_array, size_of_array);
 
-        // Allocate memory on GPU for each run
-        int *gpu_arr = NULL;
-        int *gpu_tmp = NULL;
-        HANDLE_ERROR(cudaMallocManaged((void **)&gpu_arr, size_of_array * sizeof(int)));
-        HANDLE_ERROR(cudaMallocManaged((void **)&gpu_tmp, size_of_array * sizeof(int)));
+    HANDLE_ERROR(cudaFree(gpu_array));
 
-        memcpy(gpu_arr, number_array, size_of_array * sizeof(int));
+    // // Array to store the different thread counts
+    // int threads_options[5] = {1, 256, 512, 768, 1024};
 
-        // Start timer
-        cudaEvent_t start, stop;
-        cuda_timer_start(&start, &stop);
-        printf("\nRunning Merge Sort with %d threads per block . . . \n", threads_per_block);
+    // // Loop through each thread count
+    // for (int t = 0; t < 5; t++) 
+    // {
+    //     int threads_per_block = threads_options[t];
 
-        // Calculate the number of blocks needed for the merge step
-        int blocks = (size_of_array + threads_per_block - 1) / threads_per_block;
+    //     // Allocate memory on GPU for each run
+    //     int *gpu_arr = NULL;
+    //     int *gpu_tmp = NULL;
+    //     HANDLE_ERROR(cudaMallocManaged((void **)&gpu_arr, size_of_array * sizeof(int)));
+    //     HANDLE_ERROR(cudaMallocManaged((void **)&gpu_tmp, size_of_array * sizeof(int)));
 
-        // Run mergesort with the current thread count
-        mergesort(gpu_arr, gpu_tmp, 0, size_of_array - 1, threads_per_block);
-        HANDLE_ERROR(cudaDeviceSynchronize());
+    //     memcpy(gpu_arr, number_array, size_of_array * sizeof(int));
 
-        print_array(gpu_arr, size_of_array);
-        // Stop timer
-        double gpu_sort_time = cuda_timer_stop(start, stop);
-        double gpu_sort_time_sec = gpu_sort_time / 1000.0;
+    //     // Start timer
+    //     cudaEvent_t start, stop;
+    //     cuda_timer_start(&start, &stop);
+    //     printf("\nRunning Merge Sort with %d threads per block . . . \n", threads_per_block);
 
-        printf("Time elapsed for merge sort with %d threads: %lf s\n", threads_per_block, gpu_sort_time_sec);
+    //     // Calculate the number of blocks needed for the merge step
+    //     int blocks = (size_of_array + threads_per_block - 1) / threads_per_block;
 
-        HANDLE_ERROR(cudaFree(gpu_arr));
-        HANDLE_ERROR(cudaFree(gpu_tmp));
-    }
+    //     // Run mergesort with the current thread count
+    //     mergesort(gpu_arr, gpu_tmp, 0, size_of_array - 1, threads_per_block);
+    //     HANDLE_ERROR(cudaDeviceSynchronize());
 
-    free(number_array);
+    //     print_array(gpu_arr, size_of_array);
+    //     // Stop timer
+    //     double gpu_sort_time = cuda_timer_stop(start, stop);
+    //     double gpu_sort_time_sec = gpu_sort_time / 1000.0;
+
+    //     printf("Time elapsed for merge sort with %d threads: %lf s\n", threads_per_block, gpu_sort_time_sec);
+
+    //     HANDLE_ERROR(cudaFree(gpu_arr));
+    //     HANDLE_ERROR(cudaFree(gpu_tmp));
+    // }
 
     return 0;
 }
 
-
-
-// __global__ void merge(int *arr, int *tmp, int64_t left, int64_t mid, int64_t right) {
-//     int i = left;
-//     int j = mid + 1;
-//     int k = left;
-
-//     while (i <= mid && j <= right) {
-//         if (arr[i] <= arr[j]) {
-//             tmp[k++] = arr[i++];
-//         } else {
-//             tmp[k++] = arr[j++];
-//         }
-//     }
-
-//     while (i <= mid) {
-//         tmp[k++] = arr[i++];
-//     }
-
-//     while (j <= right) {
-//         tmp[k++] = arr[j++];
-//     }
-
-//     for (i = left; i <= right; i++) {
-//         arr[i] = tmp[i];
-//     }
-// }
-
-// void mergesort(int *arr, int *tmp, int64_t const begin, int64_t const end, int thread_per_block) {
-
-//     if (begin >= end) {
-//         return;
-//     }
-
-//     int64_t mid = begin + (end - begin) / 2;
-
-//     mergesort(arr, tmp, begin, mid, thread_per_block);
-//     mergesort(arr, tmp, mid + 1, end, thread_per_block);
-
-//     merge<<<1, 1>>>(arr, tmp, begin, mid, end);
-//     cudaDeviceSynchronize();
-// }

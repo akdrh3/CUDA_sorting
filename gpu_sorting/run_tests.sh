@@ -16,7 +16,10 @@ do
     echo $number | python3 numberGenerate.py
 
     # Run testQuickSort with numbers.txt and capture output
-    output=$(echo "numbers.txt" | ./testQuickSort 2>> quick_error_log.txt)
+    #output=$(echo "numbers.txt" | ./testQuickSort 2>> quick_error_log.txt)
+
+    # Run mergesort with numbers.txt and capture output
+     output=$(echo "numbers.txt" | ./mergesort 2>> merge_error_log.txt)
 
     # Get the file size in bytes
     file_size_bytes=$(stat -c%s "numbers.txt")
