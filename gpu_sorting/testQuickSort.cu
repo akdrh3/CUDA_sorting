@@ -104,7 +104,7 @@ int main() {
     printf("Number of integers in the file : %lu\n", size_of_array);
 
     int *number_array = NULL;
-    read_from_file(file_name, &number_array, size_of_array);
+    read_from_file_cpu(file_name, &number_array, size_of_array);
     // for (int k = size_of_array - 20; k < size_of_array; ++k){
     //     printf("%d, ", number_array[k]);
     // }
