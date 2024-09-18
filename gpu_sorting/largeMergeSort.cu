@@ -74,6 +74,10 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize)
         swap_int_pointer(&arr, &tmp);
         print_array(arr, size_of_array);
     }
+    // Ensure that arr points to the sorted array
+    if (arr != gpu_array) {
+        swap_int_pointer(&arr, &tmp);  // Make sure the final sorted array is in arr
+    }
 }
 
 
@@ -108,9 +112,6 @@ int main()
         cudaEvent_t start, stop;
         cuda_timer_start(&start, &stop);
         printf("\nRunning Merge Sort with %d threads per block . . . \n", threads_per_block);
-
-        // Calculate the number of blocks needed for the merge step
-        uint64_t blocks = (size_of_array + threads_per_block - 1) / threads_per_block;
 
         // Run mergesort with the current thread count
         mergesort(gpu_array, gpu_tmp, size_of_array, threads_per_block);
