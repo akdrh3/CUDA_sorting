@@ -88,7 +88,9 @@ int main()
     printf("Number of integers in the file: %lu\n", size_of_array);
 
     int *gpu_array = NULL;
+    int *gpu_tmp = NULL;
     HANDLE_ERROR(cudaMallocManaged((void**)&gpu_array, size_of_array * sizeof(int)));
+    HANDLE_ERROR(cudaMallocManaged((void **)&gpu_tmp, size_of_array * sizeof(int)));
 
     read_from_file(file_name, gpu_array, size_of_array);
 
@@ -100,11 +102,8 @@ int main()
     for (int t = 0; t < 5; t++) 
     {
         int threads_per_block = threads_options[t];
-
-        // Allocate memory on GPU for each run
-        int *gpu_tmp = NULL;
-        HANDLE_ERROR(cudaMallocManaged((void **)&gpu_tmp, size_of_array * sizeof(int)));
-
+        read_from_file(file_name, gpu_array, size_of_array);
+  
         // Start timer
         cudaEvent_t start, stop;
         cuda_timer_start(&start, &stop);
@@ -123,10 +122,9 @@ int main()
         double gpu_sort_time_sec = gpu_sort_time / 1000.0;
 
         printf("Time elapsed for merge sort with %d threads: %lf s\n", threads_per_block, gpu_sort_time_sec);
-
-        HANDLE_ERROR(cudaFree(gpu_arr));
-        HANDLE_ERROR(cudaFree(gpu_tmp));
+        
     }
+    HANDLE_ERROR(cudaFree(gpu_tmp));
     HANDLE_ERROR(cudaFree(gpu_array));  
     return 0;
 }
