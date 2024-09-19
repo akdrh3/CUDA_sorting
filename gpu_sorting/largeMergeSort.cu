@@ -54,7 +54,7 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t right, uint64_t chu
         return;  
     }
 
-    if (chunkSize > 64){
+    if (chunkSize > 8){
         printf("tid: %lu, chunkSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, starting_index, mid, end, right);
     }
 
@@ -74,7 +74,6 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, i
         mergeSortKernel<<<gridSize, blockSize>>>(arr, tmp, size_of_array -1, chunkSize);
         HANDLE_ERROR(cudaDeviceSynchronize());  // Synchronize after each kernel launch
         swap_int_pointer(&arr, &tmp);
-        print_array(arr, size_of_array);
     }
     // Ensure that gpu_array points to the sorted array
     if (arr != gpu_array) {
