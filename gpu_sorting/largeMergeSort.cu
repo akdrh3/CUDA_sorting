@@ -69,7 +69,7 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, i
 {
     int gridSize = (size_of_array + blockSize - 1) / blockSize;
     //printf("blockSize : %d, gridSize : %d\n", blockSize, gridSize);
-    prinft("started mergesort; gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
+    printf("started mergesort; gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
 
     for (uint64_t chunkSize = 2; chunkSize <= size_of_array*2; chunkSize *= 2)
     {
@@ -80,7 +80,7 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, i
     }
     // Ensure that gpu_array points to the sorted array
     if (arr != gpu_array) {
-        printf("ensure that gpu_array points to the sorted array\n")
+        printf("ensure that gpu_array points to the sorted array\n");
         swap_int_pointer(&arr, &tmp);  // Make sure the final sorted array is in arr
         prinft("gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
     }
