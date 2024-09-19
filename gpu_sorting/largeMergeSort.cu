@@ -11,6 +11,7 @@ void print_array(int *int_array, int64_t array_size) {
 }
 
 void swap_int_pointer(int **arr_A, int **arr_B){
+    printf("swapping\n");
     int *tmp_pointer=*arr_A;
     *arr_A = *arr_B;
     *arr_B = tmp_pointer;
@@ -68,16 +69,20 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, i
 {
     int gridSize = (size_of_array + blockSize - 1) / blockSize;
     //printf("blockSize : %d, gridSize : %d\n", blockSize, gridSize);
+    prinft("started mergesort; gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
 
     for (uint64_t chunkSize = 2; chunkSize <= size_of_array*2; chunkSize *= 2)
     {
         mergeSortKernel<<<gridSize, blockSize>>>(arr, tmp, size_of_array -1, chunkSize);
         HANDLE_ERROR(cudaDeviceSynchronize());  // Synchronize after each kernel launch
         swap_int_pointer(&arr, &tmp);
+        prinft("gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
     }
     // Ensure that gpu_array points to the sorted array
     if (arr != gpu_array) {
+        printf("ensure that gpu_array points to the sorted array\n")
         swap_int_pointer(&arr, &tmp);  // Make sure the final sorted array is in arr
+        prinft("gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
     }
 }
 
@@ -102,15 +107,14 @@ int main()
 
     // Array to store the different thread counts
     int threads_options[5] = {1, 256, 512, 768, 1024};
-
+    cudaEvent_t start, stop;
     // Loop through each thread count
     for (int t = 0; t < 5; t++) 
     {
         int threads_per_block = threads_options[t];
         read_from_file(file_name, gpu_array, size_of_array);
   
-        // Start timer
-        cudaEvent_t start, stop;
+        // Start timer     
         cuda_timer_start(&start, &stop);
         printf("\nRunning Merge Sort with %d threads per block . . . \n", threads_per_block);
 
