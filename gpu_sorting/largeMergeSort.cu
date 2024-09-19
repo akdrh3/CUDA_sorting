@@ -54,7 +54,9 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t right, uint64_t chu
         return;  
     }
 
-    printf("tid: %lu, chunkSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, starting_index, mid, end, right);
+    if (chunkSize > 64){
+        printf("tid: %lu, chunkSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, starting_index, mid, end, right);
+    }
 
     if (starting_index < end){
         merge(arr, tmp, starting_index, mid, end);
@@ -65,7 +67,7 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t right, uint64_t chu
 void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, int*gpu_array)
 {
     int gridSize = (size_of_array + blockSize - 1) / blockSize;
-    printf("blockSize : %d, gridSize : %d\n", blockSize, gridSize);
+    //printf("blockSize : %d, gridSize : %d\n", blockSize, gridSize);
 
     for (uint64_t chunkSize = 2; chunkSize <= size_of_array*2; chunkSize *= 2)
     {
@@ -76,7 +78,7 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, i
     }
     // Ensure that gpu_array points to the sorted array
     if (arr != gpu_array) {
-        ("hi\n");
+        ("hi \n");
         swap_int_pointer(&arr, &tmp);  // Make sure the final sorted array is in arr
     }
 }
