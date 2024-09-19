@@ -55,7 +55,7 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t right, uint64_t chu
     }
 
     if (chunkSize > 8){
-        printf("tid: %lu, chunkSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, starting_index, mid, end, right);
+        //printf("tid: %lu, chunkSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, starting_index, mid, end, right);
     }
 
     if (starting_index < end){
@@ -77,7 +77,6 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, i
     }
     // Ensure that gpu_array points to the sorted array
     if (arr != gpu_array) {
-        ("hi \n");
         swap_int_pointer(&arr, &tmp);  // Make sure the final sorted array is in arr
     }
 }
@@ -119,10 +118,11 @@ int main()
         mergesort(gpu_array, gpu_tmp, size_of_array, threads_per_block, gpu_array);
         HANDLE_ERROR(cudaDeviceSynchronize());
 
-        printf("gpu_array: ");
-        print_array(gpu_array, size_of_array);
-        printf("gpu_tmp  : ");
-        print_array(gpu_tmp, size_of_array);
+        // printf("gpu_array: ");
+        // print_array(gpu_array, size_of_array);
+        // printf("gpu_tmp  : ");
+        // print_array(gpu_tmp, size_of_array);
+
         // Stop timer
         double gpu_sort_time = cuda_timer_stop(start, stop);
         double gpu_sort_time_sec = gpu_sort_time / 1000.0;
