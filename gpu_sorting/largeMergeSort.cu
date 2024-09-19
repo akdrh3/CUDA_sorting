@@ -76,13 +76,13 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, i
         mergeSortKernel<<<gridSize, blockSize>>>(arr, tmp, size_of_array -1, chunkSize);
         HANDLE_ERROR(cudaDeviceSynchronize());  // Synchronize after each kernel launch
         swap_int_pointer(&arr, &tmp);
-        prinft("gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
+        printf("gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
     }
     // Ensure that gpu_array points to the sorted array
     if (arr != gpu_array) {
         printf("ensure that gpu_array points to the sorted array\n");
         swap_int_pointer(&arr, &tmp);  // Make sure the final sorted array is in arr
-        prinft("gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
+        printf("gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
     }
 }
 
