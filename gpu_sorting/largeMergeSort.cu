@@ -119,7 +119,7 @@ int main()
 
         printf("gpu_array: ");
         print_array(gpu_array, size_of_array);
-        printf("gpu_tmp array: ");
+        printf("gpu_tmp  : ");
         print_array(gpu_tmp, size_of_array);
         // Stop timer
         double gpu_sort_time = cuda_timer_stop(start, stop);
