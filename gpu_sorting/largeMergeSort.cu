@@ -75,7 +75,7 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, i
         print_array(arr, size_of_array);
     }
     // Ensure that arr points to the sorted array
-    if (arr != gpu_array) {
+    if (&arr != &gpu_array) {
         swap_int_pointer(&arr, &tmp);  // Make sure the final sorted array is in arr
     }
 }
