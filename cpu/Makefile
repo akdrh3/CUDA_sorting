@@ -1,5 +1,9 @@
 CC=gcc
-CFLAGS = -g
+CFLAGS = -I.
+DEPS = util.h
 
-mergesort: mergesort.o 
-	$(CC) -g -o mergesort mergesort.o
+%.o : %.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
+
+mergesort: mergesort.o util.o
+	$(CC) -g -o mergesort mergesort.o util.o
