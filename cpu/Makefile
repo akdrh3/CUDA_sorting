@@ -1,2 +1,5 @@
-mergesort: mergesort.c 
-	gcc -g -o mergesort mergesort.c
+CC=gcc
+CFLAGS = -g
+
+mergesort: mergesort.o 
+	$(CC) -g -o mergesort mergesort.o
