@@ -72,7 +72,7 @@ int main() {
     uint64_t size_of_array = count_size_of_file(file_name);
 
     int *arr=NULL;
-    read_from_file_cpu(file_name, arr, size_of_array);
+    read_from_file_cpu(file_name, &arr, size_of_array);
 
     int n = sizeof(arr) / sizeof(arr[0]);
     
