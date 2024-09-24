@@ -65,13 +65,25 @@ void mergeSort(int arr[], int left, int right) {
 }
 
 int main() {
-    int arr[] = { 12, 11, 13, 5, 6, 7 };
+    char file_name[256];
+    printf("Enter the file name: \n");
+    scanf("%255s", file_name);
+
+    uint64_t size_of_array = count_size_of_file(file_name);
+
+    int *arr=NULL;
+    read_from_file_cpu(file_name, arr, size_of_array);
+
     int n = sizeof(arr) / sizeof(arr[0]);
     
+    struct timespec vartime = timer_start();
       // Sorting arr using mergesort
     mergeSort(arr, 0, n - 1);
 
+    long time_elapsed_nanos = timer_end(vartime);
     for (int i = 0; i < n; i++)
         printf("%d ", arr[i]);
+
+    printf("Merge sort time: %.2f Milliseconds\n", ((float)time_elapsed_nanos)/1000000);
     return 0;
 }
