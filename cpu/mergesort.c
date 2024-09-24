@@ -70,7 +70,7 @@ int main() {
     scanf("%255s", file_name);
 
     uint64_t size_of_array = count_size_of_file(file_name);
-    printf("number of array: %lu", size_of_array);
+    printf("number of array: %lu\n", size_of_array);
 
     int *arr=NULL;
     read_from_file_cpu(file_name, &arr, size_of_array);
