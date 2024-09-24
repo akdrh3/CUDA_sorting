@@ -3,10 +3,10 @@
 // Merges two subarrays of arr[].
 // First subarray is arr[left..mid]
 // Second subarray is arr[mid+1..right]
-void merge(int arr[], int left, int mid, int right) {
-    int i, j, k;
-    int n1 = mid - left + 1;
-    int n2 = right - mid;
+void merge(int arr[], uint64_t left, uint64_t mid, uint64_t right) {
+    uint64_t i, j, k;
+    uint64_t n1 = mid - left + 1;
+    uint64_t n2 = right - mid;
 
     // Create temporary arrays
     int leftArr[n1], rightArr[n2];
@@ -49,11 +49,11 @@ void merge(int arr[], int left, int mid, int right) {
 }
 
 // The subarray to be sorted is in the index range [left-right]
-void mergeSort(int arr[], int left, int right) {
+void mergeSort(int arr[], uint64_t left, uint64_t right) {
     if (left < right) {
       
         // Calculate the midpoint
-        int mid = left + (right - left) / 2;
+        uint64_t mid = left + (right - left) / 2;
 
         // Sort first and second halves
         mergeSort(arr, left, mid);
@@ -75,11 +75,9 @@ int main() {
     int *arr=NULL;
     read_from_file_cpu(file_name, &arr, size_of_array);
 
-    int n = sizeof(arr) / sizeof(arr[0]);
-    
     struct timespec vartime = timer_start();
       // Sorting arr using mergesort
-    mergeSort(arr, 0, n - 1);
+    mergeSort(arr, 0, size_of_array-1);
 
     long time_elapsed_nanos = timer_end(vartime);
     for (int i = 0; i < n; i++)
