@@ -14,7 +14,6 @@ void read_from_file_cpu(char *file_name, int **numbers, uint64_t size_of_array) 
     }
 
     for (uint64_t i = 0; i < size_of_array; i++) {
-        printf("i : %lu\n", i);
         if (fscanf(file, "%d", &(*numbers)[i]) == EOF) {
             perror("Error reading from file");
             exit(EXIT_FAILURE);

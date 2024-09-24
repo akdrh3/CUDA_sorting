@@ -80,8 +80,8 @@ int main() {
     mergeSort(arr, 0, size_of_array-1);
 
     long time_elapsed_nanos = timer_end(vartime);
-    for (int i = 0; i < size_of_array; i++)
-        printf("%d ", arr[i]);
+    // for (int i = 0; i < size_of_array; i++)
+    //     printf("%d ", arr[i]);
 
     printf("Merge sort time: %.2f Milliseconds\n", ((float)time_elapsed_nanos)/1000000);
     return 0;
