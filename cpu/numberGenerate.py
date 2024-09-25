@@ -4,7 +4,7 @@ import math
 from datetime import datetime
 
 input_a = int(input("Enter the size of numbers: "))
-print("generating ... ")
+# print("generating ... ")
 
 start_time = time.time()
 
@@ -14,8 +14,8 @@ parse = math.ceil(data_size/5)
 for i in range(0,input_a * 1000000):
     num = r.randint(0,2000000000)
     f.write("%d\n"%num)
-    if(i%parse == 0):
-        print(f"just generated {i}th element: {num}")
+    # if(i%parse == 0):
+    #     print(f"just generated {i}th element: {num}")
 
 end_time = time.time()
 
@@ -29,7 +29,7 @@ current_time = datetime.now()
 formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
 
 # Print the formatted time
-print("Current Time:", formatted_time)
+print("Starting mergesort Time:", formatted_time)
 
 # f = open("oteMillionNum.txt", "w")
 # for i in range(0,128000000):
