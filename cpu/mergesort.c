@@ -1,4 +1,5 @@
 #include "util.h"
+#include <stdlib.h>  // For malloc() and free()
 
 // Merges two subarrays of arr[].
 // First subarray is arr[left..mid]
@@ -8,8 +9,14 @@ void merge(int arr[], uint64_t left, uint64_t mid, uint64_t right) {
     uint64_t n1 = mid - left + 1;
     uint64_t n2 = right - mid;
 
-    // Create temporary arrays
-    int leftArr[n1], rightArr[n2];
+    // Dynamically allocate temporary arrays
+    int *leftArr = (int *)malloc(n1 * sizeof(int));
+    int *rightArr = (int *)malloc(n2 * sizeof(int));
+
+    if (leftArr == NULL || rightArr == NULL) {
+        printf("Memory allocation failed\n");
+        exit(1);
+    }
 
     // Copy data to temporary arrays
     for (i = 0; i < n1; i++)
@@ -25,8 +32,7 @@ void merge(int arr[], uint64_t left, uint64_t mid, uint64_t right) {
         if (leftArr[i] <= rightArr[j]) {
             arr[k] = leftArr[i];
             i++;
-        }
-        else {
+        } else {
             arr[k] = rightArr[j];
             j++;
         }
@@ -46,6 +52,10 @@ void merge(int arr[], uint64_t left, uint64_t mid, uint64_t right) {
         j++;
         k++;
     }
+
+    // Free the dynamically allocated memory
+    free(leftArr);
+    free(rightArr);
 }
 
 // The subarray to be sorted is in the index range [left-right]
@@ -70,7 +80,6 @@ int main() {
     scanf("%255s", file_name);
 
     uint64_t size_of_array = count_size_of_file(file_name);
-    printf("number of array: %lu\n", size_of_array);
 
     int *arr=NULL;
     read_from_file_cpu(file_name, &arr, size_of_array);
