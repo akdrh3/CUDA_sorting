@@ -130,9 +130,9 @@ int main()
     int threads_options[5] = {1, 256, 512, 768, 1024};
     cudaEvent_t start, stop;
     // Loop through each thread count
-    for (int t = 0; t < 5; t++) 
+    for (int t = 0; t < 1; t++) 
     {
-        int threads_per_block = threads_options[t];
+        int threads_per_block = 4;
         read_from_file(file_name, gpu_array, size_of_array);
   
         // Start timer     
