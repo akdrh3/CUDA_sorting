@@ -63,7 +63,7 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
         printf("tid: %lu, chunkSize : %lu, blockSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, blockSize, starting_index, mid, end, size_of_array);
         uint64_t curr_size, left_start;
         for (curr_size = 1; curr_size <= end; curr_size *= 2){
-            for(left_start = starting_index; left_start < end; left_start += 2*curr_size){
+            for(left_start = starting_index; left_start <= end; left_start += 2*curr_size){
                 uint64_t subarray_middle_index = left_start + curr_size -1;
                 uint64_t right_end = ((left_start + 2*curr_size -1) < (end)) ? (left_start + 2*curr_size -1) : (end);
                 if(subarray_middle_index < right_end){
@@ -93,7 +93,7 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, i
 
     uint64_t initial_chunk_size = size_of_array / blockSize + 1;
 
-    for (uint64_t chunkSize = initial_chunk_size; chunkSize <= size_of_array; chunkSize *= 2)
+    for (uint64_t chunkSize = initial_chunk_size; chunkSize <= size_of_array*2; chunkSize *= 2)
     {
         mergeSortKernel<<<gridSize, blockSize>>>(arr, tmp, size_of_array, chunkSize, blockSize);
         HANDLE_ERROR(cudaDeviceSynchronize());  // Synchronize after each kernel launch
