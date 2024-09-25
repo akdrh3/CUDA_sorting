@@ -53,7 +53,7 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
 
 
     // Ignore out-of-bounds threads
-    if (starting_index >= size_of_array -1){
+    if (starting_index > size_of_array -1){
         return;  
     }
 
