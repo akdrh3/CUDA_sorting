@@ -48,13 +48,13 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
 
     // based on tide, devide and get the portion of the array that this specific tid has to work on
     uint64_t starting_index = tid * chunkSize; //last tid * chunkSize = size_of_array - chunksize
-    uint64_t mid = min(starting_index + chunkSize / 2 , size_of_array -1;);
-    uint64_t end = min(starting_index + chunkSize - 1, size_of_array -1;);
+    uint64_t mid = min(starting_index + chunkSize / 2 , size_of_array -1);
+    uint64_t end = min(starting_index + chunkSize - 1, size_of_array -1);
 
     //check if this is the initial mergesort, which means it needs mergesort inside the kernel
     if (chunkSize == size_of_array / blockSize +1){
-        printf("initial mergesort happening inside thread\n")
-        printf("tid: %lu, chunkSize : %lu, blockSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, blockSize, starting_index, mid, end, right);
+        printf("initial mergesort happening inside thread\n");
+        printf("tid: %lu, chunkSize : %lu, blockSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, blockSize, starting_index, mid, end, size_of_array);
         uint64_t curr_size, left_start;
         for (curr_size = 1; curr_size <= end; curr_size *= 2){
             for(left_start = starting_index; left_start < end; left_start += 2*curr_size){
@@ -68,7 +68,7 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
     }
 
     // Ignore out-of-bounds threads
-    if (starting_index >= right){
+    if (starting_index >= size_of_array -1){
         return;  
     }
 
@@ -81,7 +81,7 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
 void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, int*gpu_array)
 {
     // int gridSize = (size_of_array + blockSize - 1) / blockSize;
-    int grideSize = 1;
+    int gridSize = 1;
     //printf("blockSize : %d, gridSize : %d\n", blockSize, gridSize);
     printf("started mergesort; gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
 
@@ -95,9 +95,9 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, i
         printf("gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
 
         printf("gpu_array: ");
-        print_array(gpu_array, size_of_array);
+        print_array(arr, size_of_array);
         printf("gpu_tmp  : ");
-        print_array(gpu_tmp, size_of_array);
+        print_array(tmp, size_of_array);
     }
     // Ensure that gpu_array points to the sorted array
     if (arr != gpu_array) {
