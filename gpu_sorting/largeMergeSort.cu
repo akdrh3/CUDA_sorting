@@ -66,6 +66,9 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
             }
         }
     }
+    printf(" mergesort happening between thread\n");
+    printf("tid: %lu, chunkSize : %lu, blockSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, blockSize, starting_index, mid, end, size_of_array);
+        
 
     // Ignore out-of-bounds threads
     if (starting_index >= size_of_array -1){
@@ -89,7 +92,7 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, i
 
     for (uint64_t chunkSize = initial_chunk_size; chunkSize <= size_of_array; chunkSize *= 2)
     {
-        mergeSortKernel<<<gridSize, blockSize>>>(arr, tmp, size_of_array -1, chunkSize, blockSize);
+        mergeSortKernel<<<gridSize, blockSize>>>(arr, tmp, size_of_array, chunkSize, blockSize);
         HANDLE_ERROR(cudaDeviceSynchronize());  // Synchronize after each kernel launch
         swap_int_pointer(&arr, &tmp);
         printf("gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
