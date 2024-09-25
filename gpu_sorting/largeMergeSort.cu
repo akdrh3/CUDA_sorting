@@ -51,6 +51,12 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
     uint64_t mid = min(starting_index + chunkSize / 2 , size_of_array -1);
     uint64_t end = min(starting_index + chunkSize - 1, size_of_array -1);
 
+
+    // Ignore out-of-bounds threads
+    if (starting_index >= size_of_array -1){
+        return;  
+    }
+
     //check if this is the initial mergesort, which means it needs mergesort inside the kernel
     if (chunkSize == size_of_array / blockSize +1){
         printf("initial mergesort happening inside thread\n");
@@ -65,15 +71,12 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
                 }
             }
         }
+        return;
     }
-    printf(" mergesort happening between thread\n");
+    printf("mergesort happening between thread\n");
     printf("tid: %lu, chunkSize : %lu, blockSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, blockSize, starting_index, mid, end, size_of_array);
         
 
-    // Ignore out-of-bounds threads
-    if (starting_index >= size_of_array -1){
-        return;  
-    }
 
     if (starting_index < end){
         merge(arr, tmp, starting_index, mid, end);
