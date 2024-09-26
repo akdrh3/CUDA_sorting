@@ -66,7 +66,7 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
             for(left_start = starting_index; left_start <= end; left_start += 2*curr_size){
                 uint64_t subarray_middle_index = left_start + curr_size -1;
                 uint64_t right_end = ((left_start + 2*curr_size -1) < (end)) ? (left_start + 2*curr_size -1) : (end);
-                if(subarray_middle_index < right_end){
+                if(subarray_middle_index <= right_end){
                     printf("tid: %lu, curr_size : %lu, left_start : %lu, sub_mid: %lu, right_end: %lu\n", tid, curr_size, left_start, subarray_middle_index, right_end);
                     merge(arr, tmp, left_start, subarray_middle_index, right_end);
                 }
@@ -149,11 +149,6 @@ int main()
         // Run mergesort with the current thread count
         mergesort(gpu_array, gpu_tmp, size_of_array, threads_per_block, gpu_array);
         HANDLE_ERROR(cudaDeviceSynchronize());
-
-        printf("gpu_array: ");
-        print_array(gpu_array, size_of_array);
-        printf("gpu_tmp  : ");
-        print_array(gpu_tmp, size_of_array);
 
         // Stop timer
         double gpu_sort_time = cuda_timer_stop(start, stop);
