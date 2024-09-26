@@ -4,7 +4,22 @@ extern "C" {
 #include "util.h"
 }
 
-__device__ void print_array(int *int_array, int64_t array_size) {
+__device__ void print_array_gpu(int *int_array, int64_t array_size) {
+    for (int64_t i = 0; i < array_size; ++i) {
+        printf("%d ", int_array[i]);
+    }
+    printf("\n");
+}
+
+__device__ void swap_int_pointer_gpu(int **arr_A, int **arr_B){
+    printf("swapping\n");
+    int *tmp_pointer=*arr_A;
+    *arr_A = *arr_B;
+    *arr_B = tmp_pointer;
+    //printf("swapped pointer \n\n");
+}
+
+void print_array(int *int_array, int64_t array_size) {
     for (int64_t i = 0; i < array_size; ++i) {
         printf("%d ", int_array[i]);
     }
@@ -49,9 +64,35 @@ __device__ void merge(int* arr, int* tmp, uint64_t start, uint64_t mid, uint64_t
 
     while (array_b_index <= end){
         tmp[temp_index++] = arr[array_b_index++];
+    }  
+}
+
+__device__ void initial_merge(int* arr, int* tmp, uint64_t start, uint64_t mid, uint64_t end)
+{
+    uint64_t array_a_index = start, array_b_index = mid, temp_index = start;
+    printf("inside merge; index1 : %lu, index2 : %lu, tmp index: %lu, end: %lu\n", start, mid, start, end);
+    while (array_a_index < mid && array_b_index <= end){
+        if (arr[array_a_index] <= arr[array_b_index]){
+            tmp[temp_index++] = arr[array_a_index++];
+        } 
+        else{
+            tmp[temp_index++] = arr[array_b_index++];
+        }
     }
 
-    
+    while (array_a_index < mid){
+        tmp[temp_index++] = arr[array_a_index++];
+    }
+
+    while (array_b_index <= end){
+        tmp[temp_index++] = arr[array_b_index++];
+    }  
+
+        // Now copy the sorted elements from tmp back to the original array 'arr'
+    for (uint64_t i = start; i <= end; i++) {
+        arr[i] = tmp[i];
+    }
+
 }
 
 __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint64_t chunkSize, uint64_t blockSize, uint64_t initial_chunk_size)
@@ -82,7 +123,7 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
                 uint64_t right_end = ((left_start + 2*curr_size -1) < (end)) ? (left_start + 2*curr_size -1) : (end);
                 if(subarray_middle_index <= right_end){
                     printf("tid: %lu, curr_size : %lu, left_start : %lu, sub_mid: %lu, right_end: %lu\n", tid, curr_size, left_start, subarray_middle_index, right_end);
-                    merge(arr, tmp, left_start, subarray_middle_index, right_end);
+                    initial_merge(arr, tmp, left_start, subarray_middle_index, right_end);
 
                     printf("gpu_array: ");
                     print_array(arr, size_of_array);
