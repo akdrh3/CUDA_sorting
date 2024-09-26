@@ -14,8 +14,8 @@ parse = math.ceil(data_size/5)
 for i in range(0,input_a * 1000000):
     num = r.randint(0,2000000000)
     f.write("%d\n"%num)
-    if(i%parse == 0):
-        print(f"just generated {i}th element: {num}")
+    # if(i%parse == 0):
+    #     print(f"just generated {i}th element: {num}")
 
 end_time = time.time()
 
