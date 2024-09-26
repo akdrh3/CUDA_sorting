@@ -19,6 +19,17 @@ void swap_int_pointer(int **arr_A, int **arr_B){
     //printf("swapped pointer \n\n");
 }
 
+uint_64 my_ceil(double num) {
+    int int_part = (int)num;  // Get the integer part of the number
+
+    // If the number is positive and has a fractional part, increment the integer part
+    if (num > int_part) {
+        return int_part + 1;
+    } else {
+        return int_part;
+    }
+}
+
 __device__ void merge(int* arr, int* tmp, uint64_t start, uint64_t mid, uint64_t end)
 {
     uint64_t array_a_index = start, array_b_index = mid, temp_index = start;
@@ -58,8 +69,9 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
         return;  
     }
 
+
     //check if this is the initial mergesort, which means it needs mergesort inside the kernel
-    if (chunkSize == ceil(size_of_array / blockSize)){
+    if (chunkSize >= my_ceil(size_of_array / blockSize)){
         printf("initial mergesort happening inside thread\n");
         printf("tid: %lu, chunkSize : %lu, blockSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, blockSize, starting_index, mid, end, size_of_array);
         uint64_t curr_size, left_start;
