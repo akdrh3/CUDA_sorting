@@ -50,6 +50,7 @@ __device__ void merge(int* arr, int* tmp, uint64_t start, uint64_t mid, uint64_t
     while (array_b_index <= end){
         tmp[temp_index++] = arr[array_b_index++];
     }
+
     
 }
 
@@ -71,17 +72,22 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
 
 
     //check if this is the initial mergesort, which means it needs mergesort inside the kernel
-    if (chunkSize == initial_chunk_size){
+    if (chunkSize == initial_chunk_size && tid == 0;){
         printf("initial mergesort happening inside thread\n");
         printf("tid: %lu, chunkSize : %lu, blockSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, blockSize, starting_index, mid, end, size_of_array);
         uint64_t curr_size, left_start;
         for (curr_size = 1; curr_size <= end; curr_size *= 2){
             for(left_start = starting_index; left_start <= end; left_start += 2*curr_size){
-                uint64_t subarray_middle_index = ((left_start + curr_size ) < (end)) ? (left_start + curr_size ) : (end);
+                uint64_t subarray_middle_index = ((left_start + curr_size -1 ) < (end)) ? (left_start + curr_size ) : (end);
                 uint64_t right_end = ((left_start + 2*curr_size -1) < (end)) ? (left_start + 2*curr_size -1) : (end);
                 if(subarray_middle_index <= right_end){
                     printf("tid: %lu, curr_size : %lu, left_start : %lu, sub_mid: %lu, right_end: %lu\n", tid, curr_size, left_start, subarray_middle_index, right_end);
                     merge(arr, tmp, left_start, subarray_middle_index, right_end);
+
+                    printf("gpu_array: ");
+                    print_array(arr, size_of_array);
+                    printf("gpu_tmp  : ");
+                    print_array(tmp, size_of_array);
                 }
             }
         }
@@ -146,12 +152,12 @@ int main()
 
 
     // Array to store the different thread counts
-    int threads_options[5] = {1, 256, 512, 768, 1024};
+    uint64_t threads_options[5] = {1, 256, 512, 768, 1024};
     cudaEvent_t start, stop;
     // Loop through each thread count
     for (int t = 0; t < 1; t++) 
     {
-        int threads_per_block = 4;
+        uint64_t threads_per_block = 4;
         read_from_file(file_name, gpu_array, size_of_array);
         uint64_t initial_chunk_size = (uint64_t)ceil((double)size_of_array / threads_per_block);
         printf("initial_chunk_size: %lu\n",initial_chunk_size);
