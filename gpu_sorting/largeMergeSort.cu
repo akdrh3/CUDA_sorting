@@ -12,7 +12,7 @@ __device__ void print_array_gpu(int *int_array, int64_t array_size) {
 }
 
 __device__ void swap_int_pointer_gpu(int **arr_A, int **arr_B){
-    printf("swapping\n");
+    //printf("swapping\n");
     int *tmp_pointer=*arr_A;
     *arr_A = *arr_B;
     *arr_B = tmp_pointer;
@@ -27,7 +27,7 @@ void print_array(int *int_array, int64_t array_size) {
 }
 
 void swap_int_pointer(int **arr_A, int **arr_B){
-    printf("swapping\n");
+    //printf("swapping\n");
     int *tmp_pointer=*arr_A;
     *arr_A = *arr_B;
     *arr_B = tmp_pointer;
@@ -48,7 +48,7 @@ uint64_t my_ceil(double num) {
 __device__ void merge(int* arr, int* tmp, uint64_t start, uint64_t mid, uint64_t end)
 {
     uint64_t array_a_index = start, array_b_index = mid, temp_index = start;
-    printf("inside merge; index1 : %lu, index2 : %lu, tmp index: %lu, end: %lu\n", start, mid, start, end);
+    //printf("inside merge; index1 : %lu, index2 : %lu, tmp index: %lu, end: %lu\n", start, mid, start, end);
     while (array_a_index < mid && array_b_index <= end){
         if (arr[array_a_index] <= arr[array_b_index]){
             tmp[temp_index++] = arr[array_a_index++];
@@ -70,7 +70,7 @@ __device__ void merge(int* arr, int* tmp, uint64_t start, uint64_t mid, uint64_t
 __device__ void initial_merge(int* arr, int* tmp, uint64_t start, uint64_t mid, uint64_t end)
 {
     uint64_t array_a_index = start, array_b_index = mid, temp_index = start;
-    printf("inside merge; index1 : %lu, index2 : %lu, tmp index: %lu, end: %lu\n", start, mid, start, end);
+    //printf("inside merge; index1 : %lu, index2 : %lu, tmp index: %lu, end: %lu\n", start, mid, start, end);
     while (array_a_index < mid && array_b_index <= end){
         if (arr[array_a_index] <= arr[array_b_index]){
             tmp[temp_index++] = arr[array_a_index++];
@@ -114,15 +114,15 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
 
     //check if this is the initial mergesort, which means it needs mergesort inside the kernel
     if (chunkSize == initial_chunk_size){
-        printf("initial mergesort happening inside thread\n");
-        printf("tid: %lu, chunkSize : %lu, blockSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, blockSize, starting_index, mid, end, size_of_array);
+        //printf("initial mergesort happening inside thread\n");
+        //printf("tid: %lu, chunkSize : %lu, blockSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, blockSize, starting_index, mid, end, size_of_array);
         uint64_t curr_size, left_start;
         for (curr_size = 1; curr_size <= end; curr_size *= 2){
             for(left_start = starting_index; left_start <= end; left_start += 2*curr_size){
                 uint64_t subarray_middle_index = ((left_start + curr_size -1 ) < (end)) ? (left_start + curr_size ) : (end);
                 uint64_t right_end = ((left_start + 2*curr_size -1) < (end)) ? (left_start + 2*curr_size -1) : (end);
                 if(subarray_middle_index <= right_end){
-                    printf("tid: %lu, curr_size : %lu, left_start : %lu, sub_mid: %lu, right_end: %lu\n", tid, curr_size, left_start, subarray_middle_index, right_end);
+                    //printf("tid: %lu, curr_size : %lu, left_start : %lu, sub_mid: %lu, right_end: %lu\n", tid, curr_size, left_start, subarray_middle_index, right_end);
                     initial_merge(arr, tmp, left_start, subarray_middle_index, right_end);
 
                     // printf("gpu_array: ");
@@ -134,8 +134,8 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
         }
         return;
     }
-    printf("mergesort happening between thread\n");
-    printf("tid: %lu, chunkSize : %lu, blockSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, blockSize, starting_index, mid, end, size_of_array);
+    //printf("mergesort happening between thread\n");
+    //printf("tid: %lu, chunkSize : %lu, blockSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, blockSize, starting_index, mid, end, size_of_array);
         
 
 
@@ -150,7 +150,7 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, i
     // int gridSize = (size_of_array + blockSize - 1) / blockSize;
     int gridSize = 1;
     //printf("blockSize : %d, gridSize : %d\n", blockSize, gridSize);
-    printf("started mergesort; gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
+    //printf("started mergesort; gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
 
 
     for (uint64_t chunkSize = initial_chunk_size; chunkSize <= size_of_array*2; chunkSize *= 2)
@@ -160,16 +160,16 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, i
         swap_int_pointer(&arr, &tmp);
         //printf("gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
 
-        printf("gpu_array: ");
-        print_array(arr, size_of_array);
-        printf("gpu_tmp  : ");
-        print_array(tmp, size_of_array);
+        // printf("gpu_array: ");
+        // print_array(arr, size_of_array);
+        // printf("gpu_tmp  : ");
+        // print_array(tmp, size_of_array);
     }
     // Ensure that gpu_array points to the sorted array
     if (arr != gpu_array) {
-        printf("ensure that gpu_array points to the sorted array\n");
+        //printf("ensure that gpu_array points to the sorted array\n");
         swap_int_pointer(&arr, &tmp);  // Make sure the final sorted array is in arr
-        printf("gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
+        //printf("gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
     }
 }
 
@@ -198,7 +198,7 @@ int main()
     // Loop through each thread count
     for (int t = 0; t < 1; t++) 
     {
-        uint64_t threads_per_block = 4;
+        uint64_t threads_per_block = threads_options[t];
         read_from_file(file_name, gpu_array, size_of_array);
         uint64_t initial_chunk_size = (uint64_t)ceil((double)size_of_array / threads_per_block);
         printf("initial_chunk_size: %lu\n",initial_chunk_size);
