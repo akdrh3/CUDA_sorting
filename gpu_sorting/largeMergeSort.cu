@@ -72,7 +72,7 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
 
 
     //check if this is the initial mergesort, which means it needs mergesort inside the kernel
-    if (chunkSize == initial_chunk_size && tid == 0;){
+    if (chunkSize == initial_chunk_size && tid == 0){
         printf("initial mergesort happening inside thread\n");
         printf("tid: %lu, chunkSize : %lu, blockSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, blockSize, starting_index, mid, end, size_of_array);
         uint64_t curr_size, left_start;
