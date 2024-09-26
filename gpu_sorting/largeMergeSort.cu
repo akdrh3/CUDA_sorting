@@ -119,10 +119,10 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, i
         swap_int_pointer(&arr, &tmp);
         //printf("gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
 
-        printf("gpu_array: ");
-        print_array(arr, size_of_array);
-        printf("gpu_tmp  : ");
-        print_array(tmp, size_of_array);
+        // printf("gpu_array: ");
+        // print_array(arr, size_of_array);
+        // printf("gpu_tmp  : ");
+        // print_array(tmp, size_of_array);
     }
     // Ensure that gpu_array points to the sorted array
     if (arr != gpu_array) {
