@@ -19,7 +19,7 @@ void swap_int_pointer(int **arr_A, int **arr_B){
     //printf("swapped pointer \n\n");
 }
 
-uint_64 my_ceil(double num) {
+uint64_t my_ceil(double num) {
     int int_part = (int)num;  // Get the integer part of the number
 
     // If the number is positive and has a fractional part, increment the integer part
