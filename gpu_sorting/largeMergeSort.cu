@@ -113,7 +113,7 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
 
 
     //check if this is the initial mergesort, which means it needs mergesort inside the kernel
-    if (chunkSize == initial_chunk_size && tid == 0){
+    if (chunkSize == initial_chunk_size){
         printf("initial mergesort happening inside thread\n");
         printf("tid: %lu, chunkSize : %lu, blockSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, blockSize, starting_index, mid, end, size_of_array);
         uint64_t curr_size, left_start;
@@ -125,10 +125,10 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
                     printf("tid: %lu, curr_size : %lu, left_start : %lu, sub_mid: %lu, right_end: %lu\n", tid, curr_size, left_start, subarray_middle_index, right_end);
                     initial_merge(arr, tmp, left_start, subarray_middle_index, right_end);
 
-                    printf("gpu_array: ");
-                    print_array_gpu(arr, size_of_array);
-                    printf("gpu_tmp  : ");
-                    print_array_gpu(tmp, size_of_array);
+                    // printf("gpu_array: ");
+                    // print_array_gpu(arr, size_of_array);
+                    // printf("gpu_tmp  : ");
+                    // print_array_gpu(tmp, size_of_array);
                 }
             }
         }
@@ -160,10 +160,10 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, i
         swap_int_pointer(&arr, &tmp);
         //printf("gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
 
-        // printf("gpu_array: ");
-        // print_array(arr, size_of_array);
-        // printf("gpu_tmp  : ");
-        // print_array(tmp, size_of_array);
+        printf("gpu_array: ");
+        print_array(arr, size_of_array);
+        printf("gpu_tmp  : ");
+        print_array(tmp, size_of_array);
     }
     // Ensure that gpu_array points to the sorted array
     if (arr != gpu_array) {
