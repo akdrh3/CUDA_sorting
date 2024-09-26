@@ -64,7 +64,7 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
         uint64_t curr_size, left_start;
         for (curr_size = 1; curr_size <= end; curr_size *= 2){
             for(left_start = starting_index; left_start <= end; left_start += 2*curr_size){
-                uint64_t subarray_middle_index = left_start + curr_size -1;
+                uint64_t subarray_middle_index = left_start + curr_size ;
                 uint64_t right_end = ((left_start + 2*curr_size -1) < (end)) ? (left_start + 2*curr_size -1) : (end);
                 if(subarray_middle_index <= right_end){
                     printf("tid: %lu, curr_size : %lu, left_start : %lu, sub_mid: %lu, right_end: %lu\n", tid, curr_size, left_start, subarray_middle_index, right_end);
