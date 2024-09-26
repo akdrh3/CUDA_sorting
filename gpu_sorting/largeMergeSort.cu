@@ -53,7 +53,7 @@ __device__ void merge(int* arr, int* tmp, uint64_t start, uint64_t mid, uint64_t
     
 }
 
-__global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint64_t chunkSize, uint64_t blockSize)
+__global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint64_t chunkSize, uint64_t blockSize, uint64_t initial_chunk_size)
 {
     //getting tid, start, mid, and end index
     uint64_t tid = threadIdx.x + blockDim.x * blockIdx.x;
@@ -71,7 +71,7 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
 
 
     //check if this is the initial mergesort, which means it needs mergesort inside the kernel
-    if (chunkSize >= my_ceil(size_of_array / blockSize)){
+    if (chunkSize == initial_chunk_size){
         printf("initial mergesort happening inside thread\n");
         printf("tid: %lu, chunkSize : %lu, blockSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, blockSize, starting_index, mid, end, size_of_array);
         uint64_t curr_size, left_start;
@@ -98,18 +98,17 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
 }
 
 
-void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, int*gpu_array)
+void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, int*gpu_array, uint64_t initial_chunk_size)
 {
     // int gridSize = (size_of_array + blockSize - 1) / blockSize;
     int gridSize = 1;
     //printf("blockSize : %d, gridSize : %d\n", blockSize, gridSize);
     printf("started mergesort; gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
 
-    uint64_t initial_chunk_size = ceil(size_of_array / blockSize);
 
     for (uint64_t chunkSize = initial_chunk_size; chunkSize <= size_of_array*2; chunkSize *= 2)
     {
-        mergeSortKernel<<<gridSize, blockSize>>>(arr, tmp, size_of_array, chunkSize, blockSize);
+        mergeSortKernel<<<gridSize, blockSize>>>(arr, tmp, size_of_array, chunkSize, blockSize, initial_chunk_size);
         HANDLE_ERROR(cudaDeviceSynchronize());  // Synchronize after each kernel launch
         swap_int_pointer(&arr, &tmp);
         //printf("gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
@@ -143,7 +142,7 @@ int main()
     HANDLE_ERROR(cudaMallocManaged((void**)&gpu_array, size_of_array * sizeof(int)));
     HANDLE_ERROR(cudaMallocManaged((void **)&gpu_tmp, size_of_array * sizeof(int)));
 
-    read_from_file(file_name, gpu_array, size_of_array);
+    //read_from_file(file_name, gpu_array, size_of_array);
 
 
     // Array to store the different thread counts
@@ -154,13 +153,14 @@ int main()
     {
         int threads_per_block = 4;
         read_from_file(file_name, gpu_array, size_of_array);
-  
+        uint64_t initial_chunk_size = ceil(size_of_array / threads_per_block);
+
         // Start timer     
         cuda_timer_start(&start, &stop);
         printf("\nRunning Merge Sort with %d threads per block . . . \n", threads_per_block);
 
         // Run mergesort with the current thread count
-        mergesort(gpu_array, gpu_tmp, size_of_array, threads_per_block, gpu_array);
+        mergesort(gpu_array, gpu_tmp, size_of_array, threads_per_block, gpu_array, initial_chunk_size);
         HANDLE_ERROR(cudaDeviceSynchronize());
 
         // Stop timer
