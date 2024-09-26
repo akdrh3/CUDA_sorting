@@ -153,7 +153,7 @@ int main()
     {
         int threads_per_block = 4;
         read_from_file(file_name, gpu_array, size_of_array);
-        uint64_t initial_chunk_size = ceil(size_of_array / threads_per_block);
+        uint64_t initial_chunk_size = (uint64_t)ceil((double)size_of_array / threads_per_block);
         printf("initial_chunk_size: %lu\n",initial_chunk_size);
 
         // Start timer     
