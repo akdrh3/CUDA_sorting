@@ -126,9 +126,9 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
                     initial_merge(arr, tmp, left_start, subarray_middle_index, right_end);
 
                     printf("gpu_array: ");
-                    print_array(arr, size_of_array);
+                    print_array_gpu(arr, size_of_array);
                     printf("gpu_tmp  : ");
-                    print_array(tmp, size_of_array);
+                    print_array_gpu(tmp, size_of_array);
                 }
             }
         }
