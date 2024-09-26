@@ -1,4 +1,5 @@
 #include "gpu_util.cuh"
+#include <math.h>
 extern "C" {
 #include "util.h"
 }
@@ -58,7 +59,7 @@ __global__ void mergeSortKernel(int* arr, int* tmp, uint64_t size_of_array, uint
     }
 
     //check if this is the initial mergesort, which means it needs mergesort inside the kernel
-    if (chunkSize == size_of_array / blockSize +1){
+    if (chunkSize == ceil(size_of_array / blockSize)){
         printf("initial mergesort happening inside thread\n");
         printf("tid: %lu, chunkSize : %lu, blockSize : %lu, starting index: %lu, mid: %lu, end: %lu, size of array: %lu\n", tid, chunkSize, blockSize, starting_index, mid, end, size_of_array);
         uint64_t curr_size, left_start;
@@ -92,7 +93,7 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, i
     //printf("blockSize : %d, gridSize : %d\n", blockSize, gridSize);
     printf("started mergesort; gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
 
-    uint64_t initial_chunk_size = size_of_array / blockSize + 1;
+    uint64_t initial_chunk_size = ceil(size_of_array / blockSize);
 
     for (uint64_t chunkSize = initial_chunk_size; chunkSize <= size_of_array*2; chunkSize *= 2)
     {
