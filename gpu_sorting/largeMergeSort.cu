@@ -4,7 +4,7 @@ extern "C" {
 #include "util.h"
 }
 
-void print_array(int *int_array, int64_t array_size) {
+__device__ void print_array(int *int_array, int64_t array_size) {
     for (int64_t i = 0; i < array_size; ++i) {
         printf("%d ", int_array[i]);
     }
