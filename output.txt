@@ -1,0 +1,279 @@
+File size: .009726 GB
+Enter the file name: 
+Number of integers in the file: 1000000
+initial_chunk_size: 1000000
+Running Merge Sort with 1 threads per block . . . 
+Time elapsed for merge sort with 1 threads: 2.632085 s
+
+initial_chunk_size: 3907
+Running Merge Sort with 256 threads per block . . . 
+Time elapsed for merge sort with 256 threads: 0.298470 s
+
+initial_chunk_size: 1954
+Running Merge Sort with 512 threads per block . . . 
+Time elapsed for merge sort with 512 threads: 0.301758 s
+
+initial_chunk_size: 1303
+Running Merge Sort with 768 threads per block . . . 
+Time elapsed for merge sort with 768 threads: 0.338834 s
+
+initial_chunk_size: 977
+Running Merge Sort with 1024 threads per block . . . 
+Time elapsed for merge sort with 1024 threads: 0.312094 s
+--------------------------------------
+File size: .019453 GB
+Enter the file name: 
+Number of integers in the file: 2000000
+initial_chunk_size: 2000000
+Running Merge Sort with 1 threads per block . . . 
+Time elapsed for merge sort with 1 threads: 5.507018 s
+
+initial_chunk_size: 7813
+Running Merge Sort with 256 threads per block . . . 
+Time elapsed for merge sort with 256 threads: 0.605225 s
+
+initial_chunk_size: 3907
+Running Merge Sort with 512 threads per block . . . 
+Time elapsed for merge sort with 512 threads: 0.609527 s
+
+initial_chunk_size: 2605
+Running Merge Sort with 768 threads per block . . . 
+Time elapsed for merge sort with 768 threads: 0.686216 s
+
+initial_chunk_size: 1954
+Running Merge Sort with 1024 threads per block . . . 
+Time elapsed for merge sort with 1024 threads: 0.633337 s
+--------------------------------------
+File size: .038907 GB
+Enter the file name: 
+Number of integers in the file: 4000000
+initial_chunk_size: 4000000
+Running Merge Sort with 1 threads per block . . . 
+Time elapsed for merge sort with 1 threads: 11.645093 s
+
+initial_chunk_size: 15625
+Running Merge Sort with 256 threads per block . . . 
+Time elapsed for merge sort with 256 threads: 1.547353 s
+
+initial_chunk_size: 7813
+Running Merge Sort with 512 threads per block . . . 
+Time elapsed for merge sort with 512 threads: 1.241547 s
+
+initial_chunk_size: 5209
+Running Merge Sort with 768 threads per block . . . 
+Time elapsed for merge sort with 768 threads: 1.393080 s
+
+initial_chunk_size: 3907
+Running Merge Sort with 1024 threads per block . . . 
+Time elapsed for merge sort with 1024 threads: 1.284245 s
+--------------------------------------
+File size: .077819 GB
+Enter the file name: 
+Number of integers in the file: 8000000
+initial_chunk_size: 8000000
+Running Merge Sort with 1 threads per block . . . 
+Time elapsed for merge sort with 1 threads: 24.496135 s
+
+initial_chunk_size: 31250
+Running Merge Sort with 256 threads per block . . . 
+Time elapsed for merge sort with 256 threads: 3.104817 s
+
+initial_chunk_size: 15625
+Running Merge Sort with 512 threads per block . . . 
+Time elapsed for merge sort with 512 threads: 3.187449 s
+
+initial_chunk_size: 10417
+Running Merge Sort with 768 threads per block . . . 
+Time elapsed for merge sort with 768 threads: 2.859057 s
+
+initial_chunk_size: 7813
+Running Merge Sort with 1024 threads per block . . . 
+Time elapsed for merge sort with 1024 threads: 2.636447 s
+--------------------------------------
+File size: .155629 GB
+Enter the file name: 
+Number of integers in the file: 16000000
+initial_chunk_size: 16000000
+Running Merge Sort with 1 threads per block . . . 
+Time elapsed for merge sort with 1 threads: 51.693711 s
+
+initial_chunk_size: 62500
+Running Merge Sort with 256 threads per block . . . 
+Time elapsed for merge sort with 256 threads: 6.249563 s
+
+initial_chunk_size: 31250
+Running Merge Sort with 512 threads per block . . . 
+Time elapsed for merge sort with 512 threads: 6.455473 s
+
+initial_chunk_size: 20834
+Running Merge Sort with 768 threads per block . . . 
+Time elapsed for merge sort with 768 threads: 5.808523 s
+
+initial_chunk_size: 15625
+Running Merge Sort with 1024 threads per block . . . 
+Time elapsed for merge sort with 1024 threads: 6.677574 s
+--------------------------------------
+File size: .311272 GB
+Enter the file name: 
+Number of integers in the file: 32000000
+initial_chunk_size: 32000000
+Running Merge Sort with 1 threads per block . . . 
+Time elapsed for merge sort with 1 threads: 108.267477 s
+
+initial_chunk_size: 125000
+Running Merge Sort with 256 threads per block . . . 
+Time elapsed for merge sort with 256 threads: 12.534396 s
+
+initial_chunk_size: 62500
+Running Merge Sort with 512 threads per block . . . 
+Time elapsed for merge sort with 512 threads: 12.974351 s
+
+initial_chunk_size: 41667
+Running Merge Sort with 768 threads per block . . . 
+Time elapsed for merge sort with 768 threads: 11.691779 s
+
+initial_chunk_size: 31250
+Running Merge Sort with 1024 threads per block . . . 
+Time elapsed for merge sort with 1024 threads: 13.415408 s
+--------------------------------------
+File size: .622539 GB
+Enter the file name: 
+Number of integers in the file: 64000000
+initial_chunk_size: 64000000
+Running Merge Sort with 1 threads per block . . . 
+Time elapsed for merge sort with 1 threads: 225.411766 s
+
+initial_chunk_size: 250000
+Running Merge Sort with 256 threads per block . . . 
+Time elapsed for merge sort with 256 threads: 25.656100 s
+
+initial_chunk_size: 125000
+Running Merge Sort with 512 threads per block . . . 
+Time elapsed for merge sort with 512 threads: 26.346404 s
+
+initial_chunk_size: 83334
+Running Merge Sort with 768 threads per block . . . 
+Time elapsed for merge sort with 768 threads: 23.822258 s
+
+initial_chunk_size: 62500
+Running Merge Sort with 1024 threads per block . . . 
+Time elapsed for merge sort with 1024 threads: 27.304418 s
+--------------------------------------
+File size: 1.245074 GB
+Enter the file name: 
+Number of integers in the file: 128000000
+initial_chunk_size: 128000000
+Running Merge Sort with 1 threads per block . . . 
+Time elapsed for merge sort with 1 threads: 471.097906 s
+
+initial_chunk_size: 500000
+Running Merge Sort with 256 threads per block . . . 
+Time elapsed for merge sort with 256 threads: 53.408711 s
+
+initial_chunk_size: 250000
+Running Merge Sort with 512 threads per block . . . 
+Time elapsed for merge sort with 512 threads: 53.449937 s
+
+initial_chunk_size: 166667
+Running Merge Sort with 768 threads per block . . . 
+Time elapsed for merge sort with 768 threads: 48.320031 s
+
+initial_chunk_size: 125000
+Running Merge Sort with 1024 threads per block . . . 
+Time elapsed for merge sort with 1024 threads: 55.251992 s
+--------------------------------------
+File size: 2.490158 GB
+Enter the file name: 
+Number of integers in the file: 256000000
+initial_chunk_size: 256000000
+Running Merge Sort with 1 threads per block . . . 
+Time elapsed for merge sort with 1 threads: 981.478875 s
+
+initial_chunk_size: 1000000
+Running Merge Sort with 256 threads per block . . . 
+Time elapsed for merge sort with 256 threads: 107.607703 s
+
+initial_chunk_size: 500000
+Running Merge Sort with 512 threads per block . . . 
+Time elapsed for merge sort with 512 threads: 109.865109 s
+
+initial_chunk_size: 333334
+Running Merge Sort with 768 threads per block . . . 
+Time elapsed for merge sort with 768 threads: 98.058555 s
+
+initial_chunk_size: 250000
+Running Merge Sort with 1024 threads per block . . . 
+Time elapsed for merge sort with 1024 threads: 112.205102 s
+--------------------------------------
+File size: 4.980279 GB
+Enter the file name: 
+Number of integers in the file: 512000000
+initial_chunk_size: 512000000
+Running Merge Sort with 1 threads per block . . . 
+Time elapsed for merge sort with 1 threads: 2041.250375 s
+
+initial_chunk_size: 2000000
+Running Merge Sort with 256 threads per block . . . 
+Time elapsed for merge sort with 256 threads: 216.830469 s
+
+initial_chunk_size: 1000000
+Running Merge Sort with 512 threads per block . . . 
+Time elapsed for merge sort with 512 threads: 221.611406 s
+
+initial_chunk_size: 666667
+Running Merge Sort with 768 threads per block . . . 
+Time elapsed for merge sort with 768 threads: 198.561750 s
+
+initial_chunk_size: 500000
+Running Merge Sort with 1024 threads per block . . . 
+Time elapsed for merge sort with 1024 threads: 228.982484 s
+--------------------------------------
+File size: 9.960619 GB
+Enter the file name: 
+Number of integers in the file: 1024000000
+initial_chunk_size: 1024000000
+Running Merge Sort with 1 threads per block . . . 
+Time elapsed for merge sort with 1 threads: 4285.367500 s
+
+initial_chunk_size: 4000000
+Running Merge Sort with 256 threads per block . . . 
+Time elapsed for merge sort with 256 threads: 508.058031 s
+
+initial_chunk_size: 2000000
+Running Merge Sort with 512 threads per block . . . 
+Time elapsed for merge sort with 512 threads: 532.148063 s
+
+initial_chunk_size: 1333334
+Running Merge Sort with 768 threads per block . . . 
+Time elapsed for merge sort with 768 threads: 637.697188 s
+
+initial_chunk_size: 1000000
+Running Merge Sort with 1024 threads per block . . . 
+Time elapsed for merge sort with 1024 threads: 857.911812 s
+--------------------------------------
+File size: 19.921243 GB
+Enter the file name: 
+Number of integers in the file: 2048000000
+initial_chunk_size: 2048000000
+Running Merge Sort with 1 threads per block . . . 
+Time elapsed for merge sort with 1 threads: 8889.821000 s
+
+initial_chunk_size: 8000000
+Running Merge Sort with 256 threads per block . . . 
+Time elapsed for merge sort with 256 threads: 1055.768625 s
+
+initial_chunk_size: 4000000
+Running Merge Sort with 512 threads per block . . . 
+Time elapsed for merge sort with 512 threads: 1203.861750 s
+
+initial_chunk_size: 2666667
+Running Merge Sort with 768 threads per block . . . 
+Time elapsed for merge sort with 768 threads: 1641.181625 s
+
+initial_chunk_size: 2000000
+Running Merge Sort with 1024 threads per block . . . 
+Time elapsed for merge sort with 1024 threads: 3202.518500 s
+--------------------------------------
+File size: 39.842369 GB
+
+--------------------------------------
