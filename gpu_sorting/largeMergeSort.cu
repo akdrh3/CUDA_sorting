@@ -115,6 +115,7 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, i
 {
     // int gridSize = (size_of_array + blockSize - 1) / blockSize;
     int gridSize = 1;
+    int swap = 0;
     //printf("blockSize : %d, gridSize : %d\n", blockSize, gridSize);
     //printf("started mergesort; gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
 
@@ -123,7 +124,10 @@ void mergesort(int* arr, int* tmp, uint64_t size_of_array, uint64_t blockSize, i
     {
         mergeSortKernel<<<gridSize, blockSize>>>(arr, tmp, size_of_array, chunkSize, blockSize, initial_chunk_size);
         HANDLE_ERROR(cudaDeviceSynchronize());  // Synchronize after each kernel launch
-        swap_int_pointer(&arr, &tmp);
+        if(swap != 0){
+            swap_int_pointer(&arr, &tmp);
+        }
+        swap = 1;
         //printf("gpu_array : %p, arr : %p, temp: %p\n", gpu_array, arr, tmp);
 
         printf("gpu_array: ");
