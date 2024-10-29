@@ -205,7 +205,7 @@ int main()
 
         // Start timer     
         cuda_timer_start(&start, &stop);
-        printf("Running Merge Sort with %d threads per block . . . \n", threads_per_block);
+        printf("Running Merge Sort with %lu threads per block . . . \n", threads_per_block);
 
         // Run mergesort with the current thread count
         mergesort(gpu_array, gpu_tmp, size_of_array, threads_per_block, gpu_array, initial_chunk_size);
@@ -215,7 +215,7 @@ int main()
         double gpu_sort_time = cuda_timer_stop(start, stop);
         double gpu_sort_time_sec = gpu_sort_time / 1000.0;
 
-        printf("Time elapsed for merge sort with %d threads: %lf s\n\n", threads_per_block, gpu_sort_time_sec);
+        printf("Time elapsed for merge sort with %lu threads: %lf s\n\n", threads_per_block, gpu_sort_time_sec);
         
     }
     HANDLE_ERROR(cudaFree(gpu_tmp));
