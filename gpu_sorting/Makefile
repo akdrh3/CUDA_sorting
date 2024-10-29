@@ -6,7 +6,7 @@ NVCCFLAGS = -c -rdc=true
 
 # Files
 C_FILES = util.c
-CUDA_FILES = gpu_util.cu testQuickSort.cu largeMergeSort.cu
+CUDA_FILES = gpu_util.cu testQuickSort.cu largeMergeSort_with_mergesort.cu
 
 # Objects
 C_OBJS = $(C_FILES:.c=.o)
