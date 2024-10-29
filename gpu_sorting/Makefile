@@ -11,8 +11,8 @@ CUDA_FILES = gpu_util.cu testQuickSort.cu largeMergeSort_with_mergesort.cu
 # Objects
 C_OBJS = $(C_FILES:.c=.o)
 CUDA_OBJS = $(CUDA_FILES:.cu=.o)
-OBJS = $(C_OBJS) $(filter-out largeMergeSort.o, $(CUDA_OBJS))
-LARGEMERGE_OBJS = $(C_OBJS) gpu_util.o largeMergeSort.o
+OBJS = $(C_OBJS) $(filter-out _with_mergesort.o, $(CUDA_OBJS))
+LARGEMERGE_OBJS = $(C_OBJS) gpu_util.o largeMergeSort_with_mergesort.o
 
 # Output
 OUTPUT = testQuickSort
